@@ -9,7 +9,7 @@
 已经实现的功能:
 
 - 支持原生全部功能
-- 自动获取位置信息
+- 自动获取位置信息（腾讯地图）（[免费获取腾讯地图apikey教程](https://github.com/RandallAnjie/moments/wiki/%E8%85%BE%E8%AE%AF%E5%9C%B0%E5%9B%BE%E9%85%8D%E7%BD%AE%E4%B8%8D%E6%8C%87%E5%8C%97)）
 - markdown支持（部分）
 - 无感人机验证
 - 消息推送（邮件、站内消息推送）

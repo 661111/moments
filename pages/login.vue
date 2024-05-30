@@ -4,11 +4,23 @@
     <div class="p-8 rounded shadow-md max-w-sm w-full">
       <div class="mb-4">
         <Label for="username" class="block text-gray-700 mb-2">用户名/邮箱</Label>
-        <Input v-model="state.username" autocomplete="off" type="text" id="username" />
+        <Input
+            @compositionstart="composing=true"
+            @compositionend="composing=false"
+            v-model="state.username"
+            autocomplete="off"
+            type="text"
+            id="username" />
       </div>
       <div class="mb-6">
         <Label for="password" class="block text-gray-700 mb-2">密码</Label>
-        <Input v-model="state.password" autocomplete="off" type="password" id="password" />
+        <Input
+            @compositionstart="composing=true"
+            @compositionend="composing=false"
+            v-model="state.password"
+            autocomplete="off"
+            type="password"
+            id="password" />
       </div>
       <div class="flex flex-row gap-2">
         <Button @click="login" type="button">登录</Button>
@@ -22,7 +34,9 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {toast} from "vue-sonner";
+import {ComboboxInput} from "radix-vue";
 
+const composing = ref(false);
 
 const state = reactive({
   username: '',
@@ -53,6 +67,16 @@ const login = async () => {
   );
 
 }
+
+onMounted(() => {
+  // 监听密码输入框的回车事件
+  document.getElementById('password').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      login();
+    }
+  });
+});
+
 </script>
 
 <style scoped></style>

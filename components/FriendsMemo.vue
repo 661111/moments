@@ -393,6 +393,11 @@ const gotouser = () => {
   border: transparent 1px solid;
 }
 
+.words-container{
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
 .words-container a{
   color: #3C4F7E;
   text-decoration: none;

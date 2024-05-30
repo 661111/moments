@@ -76,7 +76,7 @@
            @dragstart="event => dragStart(event, index)"
            @dragover="dragOver"
            @drop="event => drop(event, index)">
-        <img :src="getImgUrl(img)" class="cursor-pointer rounded full-cover-image-mult" />
+        <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square max-h-[200px] cursor-grab" />
         <Trash2 color="#379d1b" :size="15" class="absolute top-1 right-1 cursor-pointer"
                 @click="imgs.splice(index, 1)" />
       </div>

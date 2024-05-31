@@ -98,3 +98,10 @@ export type Notification = {
   message?: string;
   time: string;
 }
+
+export type SystemConfig = {
+  id: number;
+  type: number;
+  key:  string;
+  value?: string;
+}

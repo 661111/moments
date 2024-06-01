@@ -181,7 +181,7 @@ const welcome = async () => {
     }else{
       siteConfig = await $fetch('/api/site/config/get');
     }
-    if (siteConfig && siteConfig.success && siteConfig.data.notification) {
+    if (siteConfig && siteConfig.success && siteConfig.data.notification && siteConfig.data.notification.message && siteConfig.data.notification.message.length > 0) {
       setTimeout(() => {
         toast.message('站点通知', {
           description: siteConfig.data.notification.message,

@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
         },
     })
     let notification;
-    if(notifications) {
+    if(notifications.length>0) {
         // 取第一个通知
         notification = notifications[0];
     }else{

@@ -65,7 +65,66 @@ export default defineEventHandler(async (event) => {
     },
   });
   if (!userData || !configData) {
-    throw new Error("User not found");
+    if(!userData && userId == 1){
+      // 新数据库，初始化数据
+      const initData = {
+        username: "admin",
+        nickname: "admin",
+        password: "$2b$10$F56fAwmRR9hBPXhPjVMLtusMgC7Gxp5VzTiWSXl28InVMgTpm2fYK",
+        avatarUrl: "/avatar.webp",
+        slogan: "这个人很懒，什么都没有留下",
+        coverUrl: "/cover.webp",
+        createAt: new Date(),
+        updateAt: new Date(),
+        enableS3: false,
+        title: "admin",
+        email: "example@randallanjie.com",
+      }
+      await prisma.user.create({
+        data: initData,
+      });
+      userData = await prisma.user.findUnique({
+        where: {
+          id: 1,
+        },
+        select: {
+          nickname: true,
+          avatarUrl: true,
+          slogan: true,
+          coverUrl: true,
+          eMail: true,
+        },
+      });
+    }
+    if(!configData){
+        // 新数据库，初始化数据
+        const initData = {
+          enableS3: false,
+          favicon: "/favicon.ico",
+          title: "Randall的小屋",
+          css: "",
+          js: "",
+          beianNo: "",
+        }
+        await prisma.config.create({
+          data: initData,
+        });
+        configData = await prisma.config.findUnique({
+          where: {
+            id: 1,
+          },
+          select: {
+            favicon: true,
+            title: true,
+            css:true,
+            js:true,
+            beianNo:true,
+          },
+        });
+    }
+    if(userId !== 1){
+      throw new Error("User not found");
+    }
   }
   const data = { ...userData, ...configData };
   return {

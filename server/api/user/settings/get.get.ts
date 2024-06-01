@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
         updatedAt: new Date(),
         enableS3: false,
         title: "admin",
-        email: "example@randallanjie.com",
+        eMail: "example@randallanjie.com",
       }
       await prisma.user.create({
         data: initData,

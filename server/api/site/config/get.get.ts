@@ -14,11 +14,15 @@ export default defineEventHandler(async (event) => {
             id: 1,
         },
     });
-    let notification = await prisma.notification.findFirst({
+    let notifications = await prisma.notification.findMany({
         where: {
             type: 2,
         },
     })
+
+    // 取第一个通知
+    let notification = notifications[0];
+
 
     if(!data){
         throw new Error("Info not found");

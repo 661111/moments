@@ -19,10 +19,29 @@ export default defineEventHandler(async (event) => {
             type: 2,
         },
     })
-
-    // 取第一个通知
-    let notification = notifications[0];
-
+    let notification;
+    if(notifications) {
+        // 取第一个通知
+        notification = notifications[0];
+    }else{
+        let notificationData = {
+            type: 2,
+            send_to_user_id: 0,
+            send_to_email: '',
+            linked_memo: 0,
+            message: '',
+            time: new Date(),
+        }
+        await prisma.notification.create({
+            data: notificationData,
+        });
+        notifications = await prisma.notification.findMany({
+            where: {
+                type: 2,
+            },
+        })
+        notification = notifications[0];
+    }
 
     if(!data){
         throw new Error("Info not found");

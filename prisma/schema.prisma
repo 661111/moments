@@ -27,7 +27,7 @@ model Comment {
 model Memo {
   id              Int       @id @default(autoincrement())
   content         String?   @db.Text
-  imgs            String?
+  imgs            String?   @db.Text
   favCount        Int       @default(0)
   commentCount    Int       @default(0)
   userId          Int

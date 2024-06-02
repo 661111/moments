@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
       },
     });
   }
-  const configData = await prisma.config.findUnique({
+  let configData = await prisma.config.findUnique({
     where: {
       id: 1,
     },

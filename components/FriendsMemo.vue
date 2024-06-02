@@ -213,9 +213,13 @@ onMounted(async () => {
   if (token) {
     userId = useCookie('userId')
   }
-  // await nextTick(() => {
-  //   fancyBoxKey.value++;
-  // })
+  el.value.addEventListener('click', (e: any) => {
+    if (e.target.tagName === 'CODE') {
+      navigator.clipboard.writeText(e.target.innerText).then(() => {
+        toast.success('已复制到剪贴板')
+      })
+    }
+  })
 })
 
 const gridCols = computed(() => {
@@ -321,7 +325,7 @@ const showLess = () => {
 
 const colorMode = useColorMode()
 
-const replaceNewLinesExceptInCodeBlocks = (text) => {
+const replaceNewLinesExceptInCodeBlocks = (text: any) => {
   text = text.replaceAll(/#(\S+)/g, '[#$1](/tags/$1)');
 
   // 将链接转换为a标签

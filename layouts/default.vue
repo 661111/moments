@@ -41,14 +41,14 @@
                 <DropdownMenuSeparator v-if="!userId" class="h-[1px] bg-green6 m-[5px]" />
 
                 <DropdownMenuItem
-                    v-if="!userId"
+                    v-if="!userId && canRegister"
                     class="group text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
                     @click="navigateTo('/register')"
                 >
                   注册
                 </DropdownMenuItem>
 
-                <DropdownMenuSeparator v-if="!userId" class="h-[1px] bg-green6 m-[5px]" />
+                <DropdownMenuSeparator v-if="!userId && canRegister" class="h-[1px] bg-green6 m-[5px]" />
 
                 <DropdownMenuItem
                     v-if="userId=='1'"
@@ -152,6 +152,8 @@ const person = ref('pedro')
 const userId = useCookie('userId')
 const colorMode = useColorMode()
 
+const canRegister = ref(false)
+
 onMounted(async () => {
   // document.documentElement.style.overflow = 'hidden';
   // document.body.style.overflow = 'hidden';
@@ -163,6 +165,9 @@ onMounted(async () => {
   }
   const response = await $fetch('/api/user/settings/get?user=' + (findId == 'undefined' ? '0' : findId));
   const { data: res } = await useAsyncData('userinfo', async () => response);
+  if(res.value?.data.enableRegister){
+    canRegister.value = true
+  }
   userinfo.value = res.value?.data as any as User;
   useHead({
     link: [

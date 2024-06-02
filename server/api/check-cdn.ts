@@ -4,8 +4,6 @@ import axios from 'axios';
 export default defineEventHandler(async (event) => {
     const siteUrl = new URL(event.req.url, `http://${event.req.headers.host}`).origin;
 
-    // const siteUrl = "https://redirect.m.zhuanjie.ltd/"
-
     try {
         const response = await axios.head(siteUrl);
         const headers = response.headers;

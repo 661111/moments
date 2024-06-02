@@ -19,6 +19,20 @@ export default defineEventHandler(async (event) => {
         };
     }
 
+    if(action == 'register'){
+        const systemConfig = await prisma.systemConfig.findFirst({
+            where: {
+                key: 'enableRegister',
+            },
+        });
+        if(!systemConfig || systemConfig.value !== '1'){
+            return {
+                success: false,
+                message: "站点未开启注册",
+            };
+        }
+    }
+
     if (!email) {
         return {
             success: false,
@@ -32,7 +46,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // 生成验证码
-    const verificationCode = generateVerificationCode();
+    const verificationCode = await generateVerificationCode();
 
     if(await redis.get(action+email)){
         return { success: false, message: '上一条验证码还未过期，请五分钟后再试' };
@@ -66,9 +80,29 @@ export default defineEventHandler(async (event) => {
 
 
 
-function generateVerificationCode() {
+async function generateVerificationCode() {
     const length = 6;
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const systemConfig = await prisma.systemConfig.findFirst({
+        where: {
+            key: 'mailVerificationCodeType',
+        },
+    });
+    let codeType = 1;
+    if (systemConfig) {
+        codeType = parseInt(systemConfig.value);
+    }
+    let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    if(codeType == 1){
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    }else if(codeType == 2){
+        chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    }else if(codeType == 3){
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    }else if(codeType == 4){
+        chars = 'abcdefghijklmnopqrstuvwxyz';
+    }else if(codeType == 5){
+        chars = '0123456789';
+    }
     let code = '';
 
     for (let i = 0; i < length; i++) {

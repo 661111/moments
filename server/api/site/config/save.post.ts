@@ -34,10 +34,16 @@ type SaveConfigsReq = {
     mailFrom?: string,
     mailName?: string,
     notification?: string,
+
+    mailVerificationCodeType?: number,
+    enableRegister?: boolean,
+    timeFrontend?: string,
 };
 
 export default defineEventHandler(async (event) => {
     const data = (await readBody(event)) as SaveConfigsReq;
+
+    console.log(data);
 
     if(event.context.userId !== 1){
         throw createError({
@@ -108,8 +114,39 @@ export default defineEventHandler(async (event) => {
         });
     }
 
+    await updateSystemConfig("mailVerificationCodeType", data.mailVerificationCodeType?.toString()||"1");
+    await updateSystemConfig("enableRegister", data.enableRegister?'1':'0');
+    await updateSystemConfig("timeFrontend", data?.timeFrontend||"");
+
     return {
         success: true,
     };
 
 });
+
+
+async function updateSystemConfig(key: string, value: string){
+    const record = await prisma.systemConfig.findFirst({
+        where: {
+            key: key,
+        },
+    });
+    if(record){
+        await prisma.systemConfig.update({
+            where: {
+                id: record.id,
+            },
+            data: {
+                value: value,
+            },
+        });
+    }else{
+        await prisma.systemConfig.create({
+            data: {
+                type: 1,
+                key: key,
+                value: value,
+            },
+        });
+    }
+}

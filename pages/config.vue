@@ -43,6 +43,16 @@
     </div>
 
     <div class="flex flex-col gap-2 qus-box">
+      <Label for="enableRegister" class="font-bold">启用注册</Label>
+      <Switch id="enableRegister" v-model:checked="state.enableRegister" />
+    </div>
+
+    <div class="flex flex-col gap-2 qus-box">
+      <Label for="timeFrontend" class="font-bold">时间显示格式</Label>
+      <Input type="text" id="timeFrontend" placeholder="时间显示格式：如 YYYY-MM-DD HH:mm:ss ，若留空为XXX天前" autocomplete="off" v-model="state.timeFrontend" />
+    </div>
+
+    <div class="flex flex-col gap-2 qus-box">
       <Label for="enableS3" class="font-bold">启用S3存储</Label>
       <Switch id="enableS3" v-model:checked="state.enableS3" />
     </div>
@@ -128,6 +138,18 @@
           <Label for="mailName" class="font-bold">邮局发件人名</Label>
           <Input type="text" id="mailName" placeholder="邮局发件人名" autocomplete="off" v-model="state.mailName" />
         </div>
+
+        <div class="flex flex-col gap-2 qus-box">
+          <Label for="mailVerificationCodeType" class="font-bold">启用邮箱</Label>
+<!--          下拉选择-->
+          <Select id="mailVerificationCodeType" v-model="state.mailVerificationCodeType">
+            <option value="1">数字和字母大小写</option>
+            <option value="2">数字和字母小写</option>
+            <option value="3">纯字母大小写</option>
+            <option value="4">纯字母小写</option>
+            <option value="5">纯数字（不推荐）</option>
+          </Select>
+        </div>
       </div>
 
     </template>
@@ -196,6 +218,7 @@ const token = useCookie('token')
 import { useStorage } from "@vueuse/core";
 import type { User } from '~/lib/types';
 import {toast} from "vue-sonner";
+import { Select } from '~/components/ui/select'
 
 const response = await $fetch('/api/user/settings/get?user=0');
 
@@ -243,7 +266,11 @@ const state = reactive({
   aliyunAccessKeyId: '',
   aliyunAccessKeySecret: '',
 
-  notification: ''
+  notification: '',
+
+  mailVerificationCodeType: 1,
+  enableRegister: false,
+  timeFrontend: ''
 })
 
 const { data: res } = await useFetch<{ data: typeof state }>('/api/site/config/get',{key:'settings'})
@@ -280,6 +307,9 @@ state.aliyunAccessKeyId = data?.aliyunAccessKeyId || ''
 state.aliyunAccessKeySecret = data?.aliyunAccessKeySecret || ''
 enableS3.value = state.enableS3
 state.notification = data?.notification.message || ''
+state.mailVerificationCodeType = data?.mailVerificationCodeType || 1
+state.enableRegister = data.enableRegister ? data.enableRegister == "1" : false
+state.timeFrontend = data?.timeFrontend || ''
 
 
 const uploadImgs = async (event: Event, id: string) => {

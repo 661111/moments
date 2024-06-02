@@ -126,7 +126,16 @@ export default defineEventHandler(async (event) => {
       throw new Error("User not found");
     }
   }
-  const data = { ...userData, ...configData };
+  let systemConfigData = await prisma.systemConfig.findMany({
+    where: {
+      type: 1,
+    },
+  });
+  const data = {
+    ...userData,
+    ...configData,
+    ...Object.fromEntries(systemConfigData.map((item) => [item.key, item.value])),
+  };
   return {
     success: true,
     data: data,

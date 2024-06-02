@@ -59,6 +59,18 @@ export default defineEventHandler(async (event) => {
         };
     }
 
+    const systemConfig = await prisma.systemConfig.findFirst({
+        where: {
+            key: 'enableRegister',
+        },
+    });
+    if(!systemConfig || systemConfig.value !== '1'){
+        return {
+            success: false,
+            message: "站点未开启注册",
+        };
+    }
+
     // 从数据库中读取验证码
     const retrievedCode = await redis.get('register'+email);
     if(retrievedCode === null){

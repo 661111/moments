@@ -46,10 +46,18 @@ export default defineEventHandler(async (event) => {
     if(!data){
         throw new Error("Info not found");
     }
+
+    let configData = await prisma.systemConfig.findMany({
+        where: {
+            type: 1,
+        },
+    });
+
     if(event.context.userId == 1){
         data = {
             notification,
-            ...data
+            ...data,
+            ...Object.fromEntries(configData.map((item) => [item.key, item.value])),
         }
     }else{
         data = {
@@ -59,6 +67,7 @@ export default defineEventHandler(async (event) => {
             recaptchaSiteKey: data.recaptchaSiteKey,
             enableTencentMap: data.enableTencentMap,
             tencentMapKey: data.tencentMapKey,
+            ...Object.fromEntries(configData.map((item) => [item.key, item.value])),
         }
     }
     if(event.context.userId){

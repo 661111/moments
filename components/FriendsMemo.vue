@@ -91,6 +91,18 @@
               <MessageSquareMore :size=14 />
               <div>评论</div>
             </div>
+
+            <div class="flex flex-row gap-2 cursor-pointer items-center"
+                 @click="navigateTo(`/detail/${props.memo.id}`)">
+              <Info :size=14 />
+              <div>详情</div>
+            </div>
+
+            <div class="flex flex-row gap-2 cursor-pointer items-center"
+                 @click="copyShare(`/share/${props.memo.id}`)">
+              <Share :size=14 />
+              <div>分享</div>
+            </div>
           </div>
         </div>
       </div>
@@ -120,7 +132,7 @@ import { useElementSize, onClickOutside, watchOnce, useStorage } from '@vueuse/c
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
-import { Heart, HeartCrack, MessageSquareMore, Trash2, FilePenLine, Pin } from 'lucide-vue-next'
+import { Heart, HeartCrack, MessageSquareMore, Trash2, FilePenLine, Pin, Info, Share } from 'lucide-vue-next'
 import { memoUpdateEvent, memoAddEvent, headigUpdateEvent, memoDeleteEvent} from '@/lib/event'
 import { getImgUrl } from '~/lib/utils';
 import {
@@ -177,6 +189,15 @@ const props = withDefaults(
     showMore: boolean,
   }>(), {}
 )
+
+const copyShare = (path: string) => {
+  const url = window.location.origin + path;
+  navigator.clipboard.writeText(url).then(() => {
+    toast.success('本文链接已复制到剪贴板，快去分享吧');
+  }, (err) => {
+    console.error('链接复制失败: ', err);
+  });
+};
 
 const refreshAtpeople = async ()=>{
   if(props.memo.atpeople?.split(',')){

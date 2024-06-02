@@ -50,12 +50,12 @@
         <div class="text-xs absolute top-[-8px] right-[30px] bg-[#4c4c4c] rounded text-white p-2" v-if="showToolbar"
           ref="toolbarRef">
           <div class="flex flex-row gap-4">
-            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token && userId === props.memo.userId"
+            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token && userId === props.memo.userId && (!isDetail)"
               @click="pinned(); showToolbar = false">
               <Pin :size=14 />
               <div>{{ (props.memo.pinned ? '取消' :'') + '置顶'}}</div>
             </div>
-            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token && userId === props.memo.userId" @click="editMemo">
+            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token && userId === props.memo.userId && (!isDetail)" @click="editMemo">
               <FilePenLine :size=14 />
               <div>编辑</div>
             </div>
@@ -93,6 +93,7 @@
             </div>
 
             <div class="flex flex-row gap-2 cursor-pointer items-center"
+                 v-if="!isDetail"
                  @click="navigateTo(`/detail/${props.memo.id}`)">
               <Info :size=14 />
               <div>详情</div>
@@ -159,6 +160,15 @@ const myFancyBox = ref()
 const atpeoplenickname = ref('')
 
 let userId = ref(0)
+
+const isDetail = ref(false)
+if (window.location.pathname.startsWith('/detail/')) {
+  isDetail.value = true
+}else if(window.location.pathname.startsWith('/user/')) {
+  isDetail.value = true
+}else if(window.location.pathname.startsWith('/tags/')) {
+  isDetail.value = true
+}
 
 const gridStyle = computed(() => {
   let style = 'align-items: start;'; // 确保内容顶部对齐

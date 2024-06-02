@@ -31,6 +31,20 @@ onMounted(() => {
   })
 })
 
+const refresh = () => {
+  const res =  $fetch('/api/memo/detail', {
+    method: 'POST',
+    body: JSON.stringify({ id: id})
+  }).then(res => {
+    success.value = res.success
+    if (res.success) {
+      data.value = res.data
+    } else {
+      message.value = res.message
+    }
+  })
+}
+
 </script>
 
 <style scoped></style>

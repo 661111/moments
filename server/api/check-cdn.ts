@@ -2,10 +2,9 @@ import { defineEventHandler } from 'h3';
 import axios from 'axios';
 
 export default defineEventHandler(async (event) => {
-    // 获取访问的站点 URL，不需要参数
-    // const siteUrl = new URL(event.req.url, `http://${event.req.headers.host}`).origin;
+    const siteUrl = new URL(event.req.url, `http://${event.req.headers.host}`).origin;
 
-    const siteUrl = "https://m.zhuanjie.ltd"
+    // const siteUrl = "https://m.zhuanjie.ltd"
 
     try {
         const response = await axios.head(siteUrl);

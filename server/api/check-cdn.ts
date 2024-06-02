@@ -4,7 +4,7 @@ import axios from 'axios';
 export default defineEventHandler(async (event) => {
     const siteUrl = new URL(event.req.url, `http://${event.req.headers.host}`).origin;
 
-    // const siteUrl = "https://m.zhuanjie.ltd"
+    // const siteUrl = "https://redirect.m.zhuanjie.ltd/"
 
     try {
         const response = await axios.head(siteUrl);
@@ -12,13 +12,13 @@ export default defineEventHandler(async (event) => {
 
         const cdnProviders = {
             'Cloudflare': ['cf-ray', 'cf-visitor'],
-            // 'KuDun': ['x-cache', 'x-cdn'],
             'Akamai': ['x-akamai-transformed', 'akamai-x-cache-on'],
-            'Fastly': ['x-served-by', 'x-cache', 'x-cache-hits'],
+            'Fastly': ['fastly-client-ip', 'fastly-debug-digest'],
             'CloudFront': ['x-amz-cf-id', 'x-amz-cf-pop'],
             'EdgeCast': ['ec-range', 'edgecast'],
             'Tencent': ['s-tencent'],
-            'Alibaba': ['cdn-caching']
+            'Alibaba': ['cdn-caching'],
+            'Randall': ['x-randall-cdn'],
         };
 
         let detectedCDN = null;

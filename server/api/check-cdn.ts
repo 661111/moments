@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
             'CloudFront': ['x-amz-cf-id', 'x-amz-cf-pop'],
             'EdgeCast': ['ec-range', 'edgecast'],
             'Tencent': ['s-tencent'],
-            'Alibaba': ['cdn-caching'],
+            'Alibaba': ['ali-swift-global-savetime'],
             'Randall': ['x-randall-cdn'],
         };
 

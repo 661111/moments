@@ -73,7 +73,7 @@
         提供高防CDN加速/防护服务
       </div>
       <div id="Alibaba" class="flex flex-row gap-1 items-center" style="display: none;">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 595.2 75" style="enable-background:new 0 0 595.2 75;" xml:space="preserve" width="5.2em" height="1.5em">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 595.2 75" style="enable-background:new 0 0 595.2 75;" xml:space="preserve" width="8em" height="1em">
           <rect x="40.1" y="32.8" class="st0" width="40.1" height="9"/>
           <path class="st0" d="M100.2,0H73.7l6.4,9.1L99.5,15c3.6,1.1,5.9,4.5,5.8,8c0,0,0,0,0,0V52c0,0,0,0,0,0c0,3.6-2.3,6.9-5.8,8  l-19.3,5.9L73.7,75h26.5c11.1,0,20-9,20-20V20C120.3,9,111.3,0,100.2,0"/>
           <path class="st0" d="M20,0h26.5l-6.4,9.1L20.8,15c-3.6,1.1-5.9,4.5-5.8,8c0,0,0,0,0,0V52c0,0,0,0,0,0c0,3.6,2.3,6.9,5.8,8l19.3,5.9  l6.4,9.1H20C9,75,0,66,0,55V20C0,9,9,0,20,0"/>

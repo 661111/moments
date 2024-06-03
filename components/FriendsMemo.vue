@@ -100,7 +100,7 @@
             </div>
 
             <div class="flex flex-row gap-2 cursor-pointer items-center"
-                 @click="copyShare(`/share/${props.memo.id}`)">
+                 @click="copyShare(`/detail/${props.memo.id}`)">
               <Share :size=14 />
               <div>分享</div>
             </div>

@@ -145,7 +145,7 @@
         </div>
 
         <div class="flex flex-col gap-2 qus-box">
-          <Label for="mailVerificationCodeType" class="font-bold">启用邮箱</Label>
+          <Label for="mailVerificationCodeType" class="font-bold">验证码类型</Label>
 <!--          下拉选择-->
           <Select id="mailVerificationCodeType" v-model="state.mailVerificationCodeType">
             <option value="1">数字和字母大小写</option>

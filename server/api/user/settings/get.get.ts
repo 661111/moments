@@ -39,8 +39,10 @@ export default defineEventHandler(async (event) => {
         css: true,
       },
     });
-    userData.personalCss = userData.css;
-    delete userData.css;
+    if(userData){
+      userData.personalCss = userData.css?userData.css:'';
+      delete userData.css;
+    }
   }else{
     userData = await prisma.user.findUnique({
       where: {
@@ -55,8 +57,10 @@ export default defineEventHandler(async (event) => {
         css: true,
       },
     });
-    userData.personalCss = userData.css;
-    delete userData.css;
+    if(userData){
+      userData.personalCss = userData.css?userData.css:'';
+      delete userData.css;
+    }
   }
   let configData = await prisma.config.findUnique({
     where: {

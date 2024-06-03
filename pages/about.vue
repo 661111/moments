@@ -18,7 +18,7 @@
     </div>
   </div>
   <div id="version-info">
-    当前版本: <span id="version">V0.4.2</span>
+    当前版本: <span id="version">V0.4.3</span>
     <div class="update-details">
       更新日志:
       <br/>

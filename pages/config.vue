@@ -48,6 +48,11 @@
     </div>
 
     <div class="flex flex-col gap-2 qus-box">
+      <Label for="customLocation" class="font-bold">启用首页天气展示</Label>
+      <Switch id="customLocation" v-model:checked="state.customLocation" />
+    </div>
+
+    <div class="flex flex-col gap-2 qus-box">
       <Label for="timeFrontend" class="font-bold">时间显示格式</Label>
       <Input type="text" id="timeFrontend" placeholder="时间显示格式：如 YYYY-MM-DD HH:mm:ss ，若留空为XXX天前" autocomplete="off" v-model="state.timeFrontend" />
     </div>
@@ -150,8 +155,112 @@
             <option value="5">纯数字（不推荐）</option>
           </Select>
         </div>
-      </div>
 
+        <div class="flex flex-col gap-2 qus-box">
+          <div class="flex">
+            <Label for="emailRegistrationContent" class="font-bold">注册邮件模板</Label>
+            <div class="tooltip">
+                  <span class="tooltip-text">
+                    邮件模板变量：<br />{Code} 验证码 <br />{Email} 邮箱 <br />{Site} 网站名称 <br />{Url} 网站地址
+                  </span>
+              <div class="circle">
+                <span class="exclamation">!</span>
+              </div>
+            </div>
+          </div>
+          <Textarea id="emailRegistrationContent" v-model="state.emailRegistrationContent" rows="3"></Textarea>
+        </div>
+
+        <div class="flex flex-col gap-2 qus-box">
+          <div class="flex">
+            <Label for="emailChangeContent" class="font-bold">更换邮箱邮件模板</Label>
+            <div class="tooltip">
+                  <span class="tooltip-text">
+                    邮件模板变量：<br />{Code} 验证码 <br />{Email} 邮箱 <br />{Site} 网站名称 <br />{Url} 网站地址
+                  </span>
+              <div class="circle">
+                <span class="exclamation">!</span>
+              </div>
+            </div>
+          </div>
+          <Textarea id="emailChangeContent" v-model="state.emailChangeContent" rows="3"></Textarea>
+        </div>
+
+        <div class="flex flex-col gap-2 qus-box">
+          <div class="flex">
+            <Label for="emailResetContent" class="font-bold">找回密码邮件模板</Label>
+            <div class="tooltip">
+                  <span class="tooltip-text">
+                    邮件模板变量：<br />{Code} 验证码 <br />{Email} 邮箱 <br />{Site} 网站名称 <br />{Url} 网站地址
+                  </span>
+              <div class="circle">
+                <span class="exclamation">!</span>
+              </div>
+            </div>
+          </div>
+          <Textarea id="emailResetContent" v-model="state.emailResetContent" rows="3"></Textarea>
+        </div>
+
+        <div class="flex flex-col gap-2 qus-box">
+          <div class="flex">
+            <Label for="emailMentionNotification" class="font-bold">新Memo提及模板</Label>
+            <div class="tooltip">
+                  <span class="tooltip-text">
+                    邮件模板变量：<br />{Content} Memo内容 <br />{Nickname} Memo所属用户昵称 <br />{Sitename} 网站名称 <br />{SiteUrl} 网站Url <br />{MemoUrl} MemoUrl
+                  </span>
+              <div class="circle">
+                <span class="exclamation">!</span>
+              </div>
+            </div>
+          </div>
+          <Textarea id="emailMentionNotification" v-model="state.emailMentionNotification" rows="3"></Textarea>
+        </div>
+
+        <div class="flex flex-col gap-2 qus-box">
+          <div class="flex">
+            <Label for="emailNewCommentNotification" class="font-bold">新评论模板</Label>
+            <div class="tooltip">
+                  <span class="tooltip-text">
+                    邮件模板变量：<br />{Memo} 原文内容 <br />{Content} 回复内容 <br />{Nickname} 评论用户昵称 <br />{Sitename} 网站名称 <br />{SiteUrl} 网站Url <br />{MemoUrl} MemoUrl
+                  </span>
+              <div class="circle">
+                <span class="exclamation">!</span>
+              </div>
+            </div>
+          </div>
+          <Textarea id="emailNewCommentNotification" v-model="state.emailNewCommentNotification" rows="3"></Textarea>
+        </div>
+
+        <div class="flex flex-col gap-2 qus-box">
+          <div class="flex">
+            <Label for="emailNewReplyCommentNotification" class="font-bold">新回复模板</Label>
+            <div class="tooltip">
+                  <span class="tooltip-text">
+                    邮件模板变量：<br />{Memo} 原文内容 <br />{OriginalContent} 原评论内容 <br />{Content} 回复内容 <br />{Nickname} 评论用户昵称 <br />{Sitename} 网站名称 <br />{SiteUrl} 网站Url <br />{MemoUrl} MemoUrl
+                  </span>
+              <div class="circle">
+                <span class="exclamation">!</span>
+              </div>
+            </div>
+          </div>
+          <Textarea id="emailNewReplyCommentNotification" v-model="state.emailNewReplyCommentNotification" rows="3"></Textarea>
+        </div>
+
+        <div class="flex flex-col gap-2 qus-box">
+          <div class="flex">
+            <Label for="emailNewMentionCommentNotification" class="font-bold">新提及评论模板</Label>
+            <div class="tooltip">
+                  <span class="tooltip-text">
+                    邮件模板变量：<br />{Memo} 原文内容 <br />{Content} 回复内容 <br />{Nickname} 评论用户昵称 <br />{Sitename} 网站名称 <br />{SiteUrl} 网站Url <br />{MemoUrl} MemoUrl
+                  </span>
+              <div class="circle">
+                <span class="exclamation">!</span>
+              </div>
+            </div>
+          </div>
+          <Textarea id="emailNewMentionCommentNotification" v-model="state.emailNewMentionCommentNotification" rows="3"></Textarea>
+        </div>
+      </div>
     </template>
 
     <div class="flex flex-col gap-2 qus-box">
@@ -270,7 +379,15 @@ const state = reactive({
 
   mailVerificationCodeType: 1,
   enableRegister: false,
-  timeFrontend: ''
+  timeFrontend: '',
+  customLocation: false,
+  emailRegistrationContent: '',
+  emailChangeContent: '',
+  emailResetContent: '',
+  emailMentionNotification: '',
+  emailNewCommentNotification: '',
+  emailNewReplyCommentNotification: '',
+  emailNewMentionCommentNotification: '',
 })
 
 const { data: res } = await useFetch<{ data: typeof state }>('/api/site/config/get',{key:'settings'})
@@ -310,6 +427,14 @@ state.notification = data?.notification.message || ''
 state.mailVerificationCodeType = data?.mailVerificationCodeType || 1
 state.enableRegister = data.enableRegister ? data.enableRegister == "1" : false
 state.timeFrontend = data?.timeFrontend || ''
+state.customLocation = data.customLocation ? data.customLocation == "1" : false
+state.emailRegistrationContent = data?.emailRegistrationContent || ''
+state.emailChangeContent = data?.emailChangeContent || ''
+state.emailResetContent = data?.emailResetContent || ''
+state.emailMentionNotification = data?.emailMentionNotification || ''
+state.emailNewCommentNotification = data?.emailNewCommentNotification || ''
+state.emailNewReplyCommentNotification = data?.emailNewReplyCommentNotification || ''
+state.emailNewMentionCommentNotification = data?.emailNewMentionCommentNotification || ''
 
 
 const uploadImgs = async (event: Event, id: string) => {
@@ -352,5 +477,52 @@ const saveConfig = async () => {
 }
 .qus-box{
   margin-bottom: 10px;
+}
+
+.circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 50%;
+  position: relative;
+}
+
+.exclamation {
+  color: black;
+  font-size: 10pt;
+  font-weight: bold;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 150px;
+  background-color: #555;
+  color: #fff;
+  text-align: left;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 10pt;
+
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 </style>

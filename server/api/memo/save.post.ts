@@ -138,11 +138,25 @@ export default defineEventHandler(async (event) => {
             },
           });
           if(userat && userat.eMail && userat.eMail !== '' && userat.eMail !== user?.eMail){
+            let tmpmsg = `有一条新提及您的动态！
+                用户名为:  ${user?.nickname} 的用户在动态中提及了您，点击查看: ${siteUrl}/detail/${result.id}`;
+            const emailMentionNotification = prisma.systemConfig.findFirst({
+                where: {
+                    key: 'emailMentionNotification',
+                },
+            });
+            if(emailMentionNotification && emailMentionNotification.value && emailMentionNotification.value !== ''){
+              tmpmsg = emailMentionNotification.value;
+            }
+            tmpmsg = tmpmsg.replace('{Sitename}', siteConfig?.title);
+            tmpmsg = tmpmsg.replace('{SiteUrl}', siteUrl);
+            tmpmsg = tmpmsg.replace('{MemoUrl}', `${siteUrl}/detail/${result.id}`);
+            tmpmsg = tmpmsg.replace('{Nickname}', user?.nickname);
+            tmpmsg = tmpmsg.replace('{Content}', result.content);
             sendEmail({
               email: userat.eMail,
               subject: '新提及',
-              message: `有一条新提及您的动态！
-                用户名为:  ${user?.nickname} 的用户在动态中提及了您，点击查看: ${siteUrl}/detail/${result.id}`,
+              message: tmpmsg,
             });
           }
         }

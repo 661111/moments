@@ -124,6 +124,7 @@ export default defineEventHandler(async (event) => {
         avatarUrl: data.avatarUrl,
         slogan: data.slogan,
         coverUrl: data.coverUrl,
+        css: data.css,
     },
   });
 

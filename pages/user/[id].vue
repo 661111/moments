@@ -65,6 +65,14 @@ onMounted(async () => {
     observer.observe(getMore.value);
   }
 
+  // 拿到个人css
+  const res = await $fetch('/api/user/settings/get?user=' + findId)
+  if (res.success && res.data && res.data.personalCss) {
+    const style = document.createElement('style');
+    style.innerHTML = res.data.personalCss;
+    document.head.appendChild(style);
+  }
+
   // 当组件卸载时，停止观察
   onUnmounted(() => {
     if (getMore.value) {

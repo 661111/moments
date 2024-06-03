@@ -112,6 +112,7 @@ export default defineEventHandler(async (event) => {
             id: memoId,
         },
         select: {
+            content: true,
             userId: true,
             atpeople: true,
         },
@@ -168,15 +169,31 @@ export default defineEventHandler(async (event) => {
                         send_to_user_id: comment.linkedUser || 0,
                         send_to_email: comment.email,
                         linked_memo: memoId,
-                        message: `用户名为:  ${username} 回复了您的评论(${comment.content})，他回复道: ${content}`,
+                        message: `用户 ${username} 回复了您，他回复道: ${content}`,
                     },
                 });
+                let tmpmsg = `您在moments中的评论有新回复！用户名为:  ${username} 回复了您的评论(${comment.content})，他回复道: ${content}，点击查看: ${siteUrl}/detail/${memoId}`;
+                const emailNewReplyCommentNotification = await prisma.systemConfig.findFirst({
+                    where: {
+                        key: 'emailNewReplyCommentNotification',
+                    },
+                });
+                if(emailNewReplyCommentNotification && emailNewReplyCommentNotification.value && emailNewReplyCommentNotification.value !== ''){
+                    tmpmsg = emailNewReplyCommentNotification.value;
+                }
+                tmpmsg = tmpmsg.replace('{Sitename}', siteConfig?.title)
+                    .replace('{SiteUrl}', siteUrl)
+                    .replace('{MemoUrl}', `${siteUrl}/detail/${memoId}`)
+                    .replace('{Nickname}', username)
+                    .replace('{Content}', content)
+                    .replace('{OriginalContent}', comment.content || '')
+                    .replace('{Memo}', memo?.content || '');
                 // 邮箱通知被回复者
                 if(siteConfig?.enableEmail){
                     sendEmail({
                         email: comment.email,
                         subject: '新回复',
-                        message: `您在moments中的评论有新回复！用户名为:  ${username} 回复了您的评论(${comment.content})，他回复道: ${content}，点击查看: ${siteUrl}/detail/${memoId}`,
+                        message: tmpmsg,
                     });
                 }
 
@@ -198,17 +215,31 @@ export default defineEventHandler(async (event) => {
                             send_to_user_id: parseInt(item),
                             send_to_email: userat.eMail,
                             linked_memo: memoId,
-                            message: `用户名为:  ${username} 的用户在提及了您的动态中发表了评论，他说: ${content}`,
+                            message: `用户 ${username} 在提及了您的动态中发表了评论，他说: ${content}`,
                         },
                     });
                     if(siteConfig?.enableEmail){
+                        let tmpmsg = `有一条新提及您的动态！用户名为:  ${username} 的用户在提及了您的动态中发表了评论，他说: ${content}，点击查看: ${siteUrl}/detail/${memoId}`;
+                        const emailNewMentionCommentNotification = await prisma.systemConfig.findFirst({
+                            where: {
+                                key: 'emailNewMentionCommentNotification',
+                            },
+                        });
+                        if(emailNewMentionCommentNotification && emailNewMentionCommentNotification.value && emailNewMentionCommentNotification.value !== ''){
+                            tmpmsg = emailNewMentionCommentNotification.value;
+                        }
+                        tmpmsg = tmpmsg.replace('{Sitename}', siteConfig?.title)
+                            .replace('{SiteUrl}', siteUrl)
+                            .replace('{MemoUrl}', `${siteUrl}/detail/${memoId}`)
+                            .replace('{Nickname}', username)
+                            .replace('{Content}', content)
+                            .replace('{Memo}', memo?.content || '');
                         sendEmail({
                             email: userat.eMail,
                             subject: '新提及',
-                            message: `有一条新提及您的动态！用户名为:  ${username} 的用户在提及了您的动态中发表了评论，点击查看: ${siteUrl}/detail/${memoId}`,
+                            message: tmpmsg,
                         });
                     }
-
                 }
             }
         }
@@ -229,14 +260,29 @@ export default defineEventHandler(async (event) => {
                     send_to_user_id: memo?.userId || 0,
                     send_to_email: user.eMail,
                     linked_memo: memoId,
-                    message: `用户名为:  ${username} 在您的moment中发表了评论: ${content}`,
+                    message: `用户 ${username} 在您的moment中发表了评论: ${content}`,
                 },
             });
             if(siteConfig?.enableEmail){
+                let tmpmsg = `您的moments有新评论！用户名为:  ${username} 在您的moment中发表了评论: ${content}，点击查看: ${siteUrl}/detail/${memoId}`;
+                const emailNewCommentNotification = await prisma.systemConfig.findFirst({
+                    where: {
+                        key: 'emailNewCommentNotification',
+                    },
+                });
+                if(emailNewCommentNotification && emailNewCommentNotification.value && emailNewCommentNotification.value !== ''){
+                    tmpmsg = emailNewCommentNotification.value;
+                }
+                tmpmsg = tmpmsg.replace('{Sitename}', siteConfig?.title)
+                    .replace('{SiteUrl}', siteUrl)
+                    .replace('{MemoUrl}', `${siteUrl}/detail/${memoId}`)
+                    .replace('{Nickname}', username)
+                    .replace('{Content}', content)
+                    .replace('{Memo}', memo?.content || '');
                 sendEmail({
                     email: user.eMail || process.env.NOTIFY_MAIL || '',
                     subject: '新评论',
-                    message: `您的moments有新评论！用户名为:  ${username} 在您的moment中发表了评论: ${content}，点击查看: ${siteUrl}/detail/${memoId}`,
+                    message: tmpmsg,
                 });
             }
 

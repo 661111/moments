@@ -11,6 +11,27 @@ type sendMailReq = {
 export default defineEventHandler(async (event) => {
     const {email, action} = (await readBody(event)) as sendMailReq;
 
+    if(await redis.get(action+email)){
+        return { success: false, message: '上一条验证码还未过期，请五分钟后再试' };
+    }
+
+    if (!email) {
+        return {
+            success: false,
+            message: "邮箱不能为空",
+        };
+    }else if(!/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)){
+        return {
+            success: false,
+            message: "邮箱格式不正确",
+        };
+    }
+
+    // 生成验证码
+    const verificationCode = await generateVerificationCode();
+
+    let sendMailTemplate = `您的验证码是：${verificationCode}，五分钟内有效，五分钟内请勿重新尝试发送。`;
+
     // 判断参数是否正确
     if(!['register','resetPassword','changeEmail'].includes(action)){
         return {
@@ -31,26 +52,34 @@ export default defineEventHandler(async (event) => {
                 message: "站点未开启注册",
             };
         }
+        const emailRegistrationContent = await prisma.systemConfig.findFirst({
+            where: {
+                key: 'emailRegistrationContent',
+            },
+        });
+        if(emailRegistrationContent && emailRegistrationContent.value && emailRegistrationContent.value !== ''){
+            sendMailTemplate = emailRegistrationContent.value;
+        }
+    }else if(action == 'resetPassword'){
+        const emailResetContent = await prisma.systemConfig.findFirst({
+            where: {
+                key: 'emailResetContent',
+            },
+        });
+        if(emailResetContent && emailResetContent.value && emailResetContent.value !== ''){
+            sendMailTemplate = emailResetContent.value;
+        }
+    }else if(action == 'changeEmail'){
+        const emailChangeContent = await prisma.systemConfig.findFirst({
+            where: {
+                key: 'emailChangeContent',
+            },
+        });
+        if(emailChangeContent && emailChangeContent.value && emailChangeContent.value !== ''){
+            sendMailTemplate = emailChangeContent.value;
+        }
     }
 
-    if (!email) {
-        return {
-            success: false,
-            message: "邮箱不能为空",
-        };
-    }else if(!/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)){
-        return {
-            success: false,
-            message: "邮箱格式不正确",
-        };
-    }
-
-    // 生成验证码
-    const verificationCode = await generateVerificationCode();
-
-    if(await redis.get(action+email)){
-        return { success: false, message: '上一条验证码还未过期，请五分钟后再试' };
-    }
 
     // 从数据库中读取title
     const title = await prisma.config.findUnique({
@@ -59,13 +88,19 @@ export default defineEventHandler(async (event) => {
         },
         select: {
             title: true,
+            siteUrl: true,
         },
     });
+
+    sendMailTemplate = sendMailTemplate.replace('{Code}', verificationCode);
+    sendMailTemplate = sendMailTemplate.replace('{Email}', email);
+    sendMailTemplate = sendMailTemplate.replace('{Title}', title.title==null?'moments':title.title);
+    sendMailTemplate = sendMailTemplate.replace('{SiteUrl}', title.siteUrl==null?(new URL(event.req.url, `http://${event.req.headers.host}`).origin):title.siteUrl);
 
     const sendData = {
         email: email,
         subject: title.title==='undefined'?'验证码':title.title+'验证码',
-        message: `您的验证码是：${verificationCode}，五分钟内有效，五分钟内请勿重新尝试发送。`,
+        message: sendMailTemplate,
     };
     const returns = await sendEmail(sendData);
     if(returns.success){

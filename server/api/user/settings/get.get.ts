@@ -36,8 +36,11 @@ export default defineEventHandler(async (event) => {
         avatarUrl: true,
         slogan: true,
         coverUrl: true,
+        css: true,
       },
     });
+    userData.personalCss = userData.css;
+    delete userData.css;
   }else{
     userData = await prisma.user.findUnique({
       where: {
@@ -49,8 +52,11 @@ export default defineEventHandler(async (event) => {
         slogan: true,
         coverUrl: true,
         eMail: true,
+        css: true,
       },
     });
+    userData.personalCss = userData.css;
+    delete userData.css;
   }
   let configData = await prisma.config.findUnique({
     where: {

@@ -38,6 +38,14 @@ type SaveConfigsReq = {
     mailVerificationCodeType?: number,
     enableRegister?: boolean,
     timeFrontend?: string,
+    customLocation?: boolean,
+    emailRegistrationContent?: string,
+    emailChangeContent?: string,
+    emailResetContent?: string,
+    emailMentionNotification?: string,
+    emailNewCommentNotification?: string,
+    emailNewReplyCommentNotification?: string,
+    emailNewMentionCommentNotification?: string,
 };
 
 export default defineEventHandler(async (event) => {
@@ -117,6 +125,14 @@ export default defineEventHandler(async (event) => {
     await updateSystemConfig("mailVerificationCodeType", data.mailVerificationCodeType?.toString()||"1");
     await updateSystemConfig("enableRegister", data.enableRegister?'1':'0');
     await updateSystemConfig("timeFrontend", data?.timeFrontend||"");
+    await updateSystemConfig("customLocation", data.customLocation?'1':'0');
+    await updateSystemConfig("emailRegistrationContent", data.emailRegistrationContent||"");
+    await updateSystemConfig("emailChangeContent", data.emailChangeContent||"");
+    await updateSystemConfig("emailResetContent", data.emailResetContent||"");
+    await updateSystemConfig("emailMentionNotification", data.emailMentionNotification||"");
+    await updateSystemConfig("emailNewCommentNotification", data.emailNewCommentNotification||"");
+    await updateSystemConfig("emailNewReplyCommentNotification", data.emailNewReplyCommentNotification||"");
+    await updateSystemConfig("emailNewMentionCommentNotification", data.emailNewMentionCommentNotification||"");
 
     return {
         success: true,

@@ -30,6 +30,42 @@
             </div>
           </PopoverContent>
         </Popover>
+        <Popover :open="music163Open">
+          <PopoverTrigger as="div">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <Music4 :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="music163Open = true" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>插入音乐</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+          </PopoverTrigger>
+          <PopoverContent as-child @interact-outside="music163Open = false">
+            <div @keyup.enter="importMusic()">
+              <div class="flex flex-col space-y">
+                <div class=" text-xs my-2 flex justify-between">
+                  <span>插入音乐</span>
+                  <div class="tooltip">
+                  <span class="tooltip-text">
+                    目前只支持粘贴网易云音乐的分享链接，可以是单曲、歌单、专辑，暂不支持其他音乐平台或者自行上传，请等待后续更新
+                  </span>
+                    <div class="circle">
+                      <span class="exclamation">!</span>
+                    </div>
+                  </div>
+                </div>
+                <Input class="my-2" placeholder="请输入网易云音乐代码" v-model="music163Url" />
+              </div>
+              <Button size="sm" class="mr-2" @click="importMusic">确定</Button>
+              <Button size="sm" variant="ghost"
+                      @click="music163Url = ''; music163Url = ''; audioUrl = ''; music163Open = false;">清空</Button>
+            </div>
+          </PopoverContent>
+        </Popover>
 
 
         <Label for="imgUpload">
@@ -81,6 +117,18 @@
                 @click="imgs.splice(index, 1)" />
       </div>
     </div>
+
+    <div style="max-width: 100%">
+      <ClientOnly>
+        <APlayer
+            :key="musicBoxKey"
+            :songType="musicType"
+            :songId="musicId"
+            v-if="music163Url && music163Url !== '' && musicType && musicId"
+        />
+      </ClientOnly>
+    </div>
+
     <div style="margin: 10px 10px;">
       <div class="flex flex-row justify-between items-center gap-2 memo-info-list">
         <div class="text-sm flex flex-row gap-1 flex-1 items-center">
@@ -287,6 +335,7 @@ import {memo} from "@tanstack/virtual-core";
 const locationInfo = ref('');
 const inputs0 = ref('');
 const inputs1 = ref('');
+let musicBoxKey = ref(0)
 
 const v = ref('')
 
@@ -327,6 +376,31 @@ const showEmojiRef = ref<HTMLElement>()
 const keyframes = { transform: 'rotate(360deg)' }
 const showEmoji = ref(false)
 const emit = defineEmits(['memo-added'])
+
+const music163Url = ref('')
+const musicType = ref('')
+const musicId = ref('')
+
+const importMusic = () => {
+  if(music163Url.value.includes("music.163.com")){
+    // 如果里面有playlist
+    if(music163Url.value.includes("playlist")){
+      musicType.value = 'playlist'
+      musicId.value = music163Url.value.split('playlist?id=')[1]
+    }else if(music163Url.value.includes("song")){
+      musicType.value = 'song'
+      musicId.value = music163Url.value.split('song?id=')[1]
+    }else if(music163Url.value.includes("album")) {
+      musicType.value = 'album'
+      musicId.value = music163Url.value.split('album?id=')[1]
+    }
+  }else{
+    music163Url.value = ''
+  }
+  music163Open.value = false
+  musicBoxKey++
+}
+
 const toggleShowEmoji = () => {
   showEmoji.value = !showEmoji.value
   useAnimate(showEmojiRef.value, keyframes, { duration: 1000, easing: 'ease-in-out' })
@@ -365,6 +439,8 @@ const externalFavicon = ref('')
 const externalPending = ref(false)
 const externalFetchError = ref(false)
 const externalTitleEditing = ref(false)
+const music163Open = ref(false)
+
 let shouConfigButton = false
 let userId = ref(0)
 userId = useCookie('userId') || 0
@@ -451,7 +527,8 @@ const submitMemo = async () => {
     location: locationInfo.value,
     externalFavicon: externalFavicon.value,
     externalTitle: externalTitle.value,
-    externalUrl: externalUrl.value
+    externalUrl: externalUrl.value,
+    music163Url: music163Url.value
   }
   toast.promise($fetch('/api/memo/save', {
         method: 'POST',
@@ -465,6 +542,9 @@ const submitMemo = async () => {
           //     return '提交成功';
           //   }
             memoAddEvent.emit(data.id, {data:body,atpeopleNickname:atpeopleNickname.value,avpeopleNickname:avpeopleNickname.value})
+            if(!body.id || body.id <= 0){
+              location.reload();
+            }
             content.value = ''
             id.value = -1
             imgs.value = []
@@ -477,6 +557,8 @@ const submitMemo = async () => {
             externalTitle.value = ''
             externalUrl.value = ''
             showEmoji.value = false
+            music163Open.value = false
+            music163Url.value = ''
             emit('memo-added')
             return '提交成功';
           } else {
@@ -550,6 +632,24 @@ memoUpdateEvent.on((event: Memo) => {
   externalFavicon.value = event.externalFavicon || ''
   externalTitle.value = event.externalTitle || ''
   externalUrl.value = event.externalUrl || ''
+  music163Url.value = event.music163Url || ''
+  if(music163Url.value.includes("music.163.com")){
+    // 如果里面有playlist
+    if(music163Url.value.includes("playlist")){
+      musicType.value = 'playlist'
+      musicId.value = music163Url.value.split('playlist?id=')[1]
+    }else if(music163Url.value.includes("song")){
+      musicType.value = 'song'
+      musicId.value = music163Url.value.split('song?id=')[1]
+    }else if(music163Url.value.includes("album")) {
+      musicType.value = 'album'
+      musicId.value = music163Url.value.split('album?id=')[1]
+    }
+  }else{
+    music163Url.value = ''
+  }
+  music163Open.value = false
+  musicBoxKey++
 })
 
 
@@ -672,5 +772,56 @@ img{
   -webkit-user-select:none;
   -o-user-select:none;
   user-select:none;
+}
+
+.qus-box{
+  margin-bottom: 10px;
+}
+
+.circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 50%;
+  position: relative;
+}
+
+.exclamation {
+  color: black;
+  font-size: 10pt;
+  font-weight: bold;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 150px;
+  background-color: #555;
+  color: #fff;
+  text-align: left;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 10pt;
+
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 </style>

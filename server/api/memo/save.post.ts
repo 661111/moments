@@ -12,6 +12,7 @@ type SaveMemoReq = {
   externalUrl?: string;
   externalTitle?: string;
   externalFavicon?: string;
+  music163Url?: string;
 };
 
 const staticWord = {
@@ -111,6 +112,7 @@ export default defineEventHandler(async (event) => {
     externalTitle: body.externalTitle,
     externalFavicon: body.externalFavicon,
     content: body.content,
+    music163Url: body.music163Url,
   };
   const result = await prisma.memo.upsert({
     where: {

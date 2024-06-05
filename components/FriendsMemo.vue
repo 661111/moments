@@ -32,6 +32,17 @@
           />
         </FancyBox>
       </div>
+      <div style="max-width: 100%">
+        <ClientOnly>
+          <APlayer
+              :key="musicBoxKey"
+              :songType="musicType"
+              :songId="musicId"
+              v-if="props.memo.music163Url && props.memo.music163Url !== '' && musicType && musicId"
+          />
+        </ClientOnly>
+      </div>
+
       <div class="text-[#57BE6B] font-medium dark:text-white text-xs mt-3 select-none" v-if="memo.userId === userId">
         {{(props.memo.atpeople?('提到了'+atpeoplenickname):'')}}
       </div>
@@ -146,12 +157,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+} from '@/components/ui/alert-dialog';
 import {toast} from "vue-sonner";
 import DOMPurify from 'dompurify';
 
 const token = useCookie('token')
 let fancyBoxKey = ref(0);
+let musicBoxKey = ref(0);
 
 let imgs = computed(() => props.memo.imgs ? props.memo.imgs.split(',') : []);
 
@@ -162,6 +174,7 @@ const atpeoplenickname = ref('')
 let userId = ref(0)
 
 const isDetail = ref(false)
+
 if (window.location.pathname.startsWith('/detail/')) {
   isDetail.value = true
 }else if(window.location.pathname.startsWith('/user/')) {
@@ -199,6 +212,26 @@ const props = withDefaults(
     showMore: boolean,
   }>(), {}
 )
+const musicType = ref('')
+const musicId = ref('')
+
+if(props.memo.music163Url){
+  if(props.memo.music163Url.includes("music.163.com")){
+    // 如果里面有playlist
+    if(props.memo.music163Url.includes("playlist")){
+      musicType.value = 'playlist'
+      musicId.value = props.memo.music163Url.split('playlist?id=')[1]
+    }else if(props.memo.music163Url.includes("song")){
+      musicType.value = 'song'
+      musicId.value = props.memo.music163Url.split('song?id=')[1]
+    }else if(props.memo.music163Url.includes("album")) {
+      musicType.value = 'album'
+      musicId.value = props.memo.music163Url.split('album?id=')[1]
+    }
+  }else{
+    props.memo.music163Url = ''
+  }
+}
 
 const copyShare = (path: string) => {
   const url = window.location.origin + path;
@@ -326,10 +359,50 @@ memoAddEvent.on((id: any, body: any) => {
       props.memo.imgs = body.data.imgUrls.join(',')
       fancyBoxKey.value++;
     }
+    props.memo.music163Url = body.data.music163Url
+    if(props.memo.music163Url) {
+      if (props.memo.music163Url.includes("music.163.com")) {
+        // 如果里面有playlist
+        if (props.memo.music163Url.includes("playlist")) {
+          musicType.value = 'playlist'
+          musicId.value = props.memo.music163Url.split('playlist?id=')[1]
+        } else if (props.memo.music163Url.includes("song")) {
+          musicType.value = 'song'
+          musicId.value = props.memo.music163Url.split('song?id=')[1]
+        } else if (props.memo.music163Url.includes("album")) {
+          musicType.value = 'album'
+          musicId.value = props.memo.music163Url.split('album?id=')[1]
+        }
+      } else {
+        props.memo.music163Url = ''
+      }
+    }
+    musicBoxKey.value++;
   }
   if(body.data.id <= 0){
     emit('memo-update')
     fancyBoxKey.value++;
+    // props.memo.music163Url = body.data.music163Url
+    if(props.memo.music163Url) {
+      if (props.memo.music163Url.includes("music.163.com")) {
+        // 如果里面有playlist
+        if (props.memo.music163Url.includes("playlist")) {
+          musicType.value = 'playlist'
+          musicId.value = props.memo.music163Url.split('playlist?id=')[1]
+        } else if (props.memo.music163Url.includes("song")) {
+          musicType.value = 'song'
+          musicId.value = props.memo.music163Url.split('song?id=')[1]
+        } else if (props.memo.music163Url.includes("album")) {
+          musicType.value = 'album'
+          musicId.value = props.memo.music163Url.split('album?id=')[1]
+        }
+      } else {
+        props.memo.music163Url = ''
+      }
+    }else{
+      props.memo.music163Url = ''
+    }
+    musicBoxKey.value++;
   }
 })
 

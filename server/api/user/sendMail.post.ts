@@ -107,7 +107,7 @@ export default defineEventHandler(async (event) => {
         await redis.set(action+email, verificationCode, 'EX', 5 * 60);
         return { success: true, message: '验证码已发送至您的邮箱，验证码五分钟内有效，请注意查收' };
     }else{
-        return { success: false, message: '验证码发送失败，请检查邮箱是否正确，或当前邮件服务异常稍后再试' };
+        return { success: false, message: '验证码发送失败，请检查邮箱是否正确，或当前邮件服务异常稍后再试', error: returns.error};
     }
 
 

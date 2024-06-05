@@ -5,7 +5,7 @@
 <script lang="ts" setup>
 import axios from 'axios';
 import APlayer from '@/components/APlayer.vue';
-import 'APlayer/dist/APlayer.min.css'
+import 'aplayer/dist/APlayer.min.css';
 import type {PropType} from '@vue/runtime-core';
 import {nextTick, onBeforeUnmount, onMounted, ref} from 'vue'
 

@@ -16,7 +16,7 @@
 
             <DropdownMenuPortal>
               <DropdownMenuContent
-                  class="min-w-[150px] outline-none bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+                  class="min-w-[150px] outline-none bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade z-10"
                   :side-offset="5"
               >
                 <DropdownMenuSeparator class="h-[1px] bg-green6 m-[5px]" />
@@ -241,6 +241,7 @@ div.tigger {
   right: 10px;
   bottom: 10px;
 }
+
 
 @media (min-width: 1024px) {
   div.tigger {

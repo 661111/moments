@@ -845,4 +845,36 @@ img{
   visibility: visible;
   opacity: 1;
 }
+
+.aplayer-body {
+  max-width: 100%; /* 限制宽度不超过父容器 */
+  width: 100%; /* 自动调整宽度 */
+}
+
+.aplayer-pic{
+  z-index: 1;
+}
+
+.aplayer-music {
+  overflow: hidden;
+  display: inline-block;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  animation: scroll 8s linear infinite;
+}
+
+.aplayer-title, .aplayer-author {
+  padding-right: 10px;
+}
+
+@keyframes scroll {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
+
+.aplayer-lrc {
+  margin-top: 25px !important; /* 调整歌词与播放器的间距 */
+}
+
 </style>

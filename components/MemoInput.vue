@@ -51,7 +51,7 @@
                   <span>插入音乐</span>
                   <div class="tooltip">
                   <span class="tooltip-text">
-                    目前只支持粘贴网易云音乐的分享链接，可以是单曲、歌单、专辑，暂不支持其他音乐平台或者自行上传，请等待后续更新
+                    目前只支持粘贴网易云音乐和qq音乐的分享链接，暂不支持qq分享短链接，请自行粘贴qq分享链接到浏览器，跳转后复制跳转后的qq链接
                   </span>
                     <div class="circle">
                       <span class="exclamation">!</span>

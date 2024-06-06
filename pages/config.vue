@@ -58,6 +58,21 @@
     </div>
 
     <div class="flex flex-col gap-2 qus-box">
+      <div class="flex">
+        <Label for="metingApi" class="font-bold">音乐API</Label>
+        <div class="tooltip">
+                  <span class="tooltip-text">
+                    音乐API地址，留空默认使用原版，如果原版不能用可以使用我的服务：https://musicapi.randallanjie.com/
+                  </span>
+          <div class="circle">
+            <span class="exclamation">!</span>
+          </div>
+        </div>
+      </div>
+      <Input type="text" id="metingApi" placeholder="填写音乐api，例如：https://musicapi.randallanjie.com/" autocomplete="off" v-model="state.metingApi" />
+    </div>
+
+    <div class="flex flex-col gap-2 qus-box">
       <Label for="enableS3" class="font-bold">启用S3存储</Label>
       <Switch id="enableS3" v-model:checked="state.enableS3" />
     </div>
@@ -388,6 +403,7 @@ const state = reactive({
   emailNewCommentNotification: '',
   emailNewReplyCommentNotification: '',
   emailNewMentionCommentNotification: '',
+  metingApi: ''
 })
 
 const { data: res } = await useFetch<{ data: typeof state }>('/api/site/config/get',{key:'settings'})
@@ -435,6 +451,7 @@ state.emailMentionNotification = data?.emailMentionNotification || ''
 state.emailNewCommentNotification = data?.emailNewCommentNotification || ''
 state.emailNewReplyCommentNotification = data?.emailNewReplyCommentNotification || ''
 state.emailNewMentionCommentNotification = data?.emailNewMentionCommentNotification || ''
+state.metingApi = data?.metingApi || ''
 
 
 const uploadImgs = async (event: Event, id: string) => {

@@ -32,13 +32,17 @@
           />
         </FancyBox>
       </div>
-      <div style="max-width: 100%">
+      <div
+          style="max-width: 100%"
+          v-if="props.memo.music163Url && props.memo.music163Url !== '' && musicType && musicId"
+      >
         <ClientOnly>
-          <APlayer
+          <meting-js
               :key="musicBoxKey"
-              :songType="musicType"
-              :songId="musicId"
-              v-if="props.memo.music163Url && props.memo.music163Url !== '' && musicType && musicId"
+              :server="musicPlatform"
+              :type="musicType"
+              :id="musicId"
+              :list-folded="true"
           />
         </ClientOnly>
       </div>
@@ -160,6 +164,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import {toast} from "vue-sonner";
 import DOMPurify from 'dompurify';
+import 'aplayer/dist/APlayer.min.css';
 
 const token = useCookie('token')
 let fancyBoxKey = ref(0);

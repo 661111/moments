@@ -46,6 +46,7 @@ type SaveConfigsReq = {
     emailNewCommentNotification?: string,
     emailNewReplyCommentNotification?: string,
     emailNewMentionCommentNotification?: string,
+    metingApi?: string,
 };
 
 export default defineEventHandler(async (event) => {
@@ -133,6 +134,7 @@ export default defineEventHandler(async (event) => {
     await updateSystemConfig("emailNewCommentNotification", data.emailNewCommentNotification||"");
     await updateSystemConfig("emailNewReplyCommentNotification", data.emailNewReplyCommentNotification||"");
     await updateSystemConfig("emailNewMentionCommentNotification", data.emailNewMentionCommentNotification||"");
+    await updateSystemConfig("metingApi", data.metingApi||"");
 
     return {
         success: true,

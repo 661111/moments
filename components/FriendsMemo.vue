@@ -388,6 +388,15 @@ memoAddEvent.on((id: any, body: any) => {
           musicType.value = 'album'
           musicId.value = props.memo.music163Url.split('album?id=')[1].split('&')[0]
         }
+      }else if(props.memo.music163Url.includes("y.qq.com")){
+        musicPlatform.value = 'tencent'
+        if(props.memo.music163Url.includes("songDetail")){
+          musicType.value = 'song'
+          musicId.value = props.memo.music163Url.split('songDetail/')[1].split('?')[0]
+        }else if(props.memo.music163Url.includes("playlist")){
+          musicType.value = 'playlist'
+          musicId.value = props.memo.music163Url.split('playlist/')[1].split('?')[0]
+        }
       } else {
         props.memo.music163Url = ''
       }
@@ -411,7 +420,16 @@ memoAddEvent.on((id: any, body: any) => {
           musicType.value = 'album'
           musicId.value = props.memo.music163Url.split('album?id=')[1].split('&')[0]
         }
-      } else {
+      } else if(props.memo.music163Url.includes("y.qq.com")){
+        musicPlatform.value = 'tencent'
+        if(props.memo.music163Url.includes("songDetail")){
+          musicType.value = 'song'
+          musicId.value = props.memo.music163Url.split('songDetail/')[1].split('?')[0]
+        }else if(props.memo.music163Url.includes("playlist")){
+          musicType.value = 'playlist'
+          musicId.value = props.memo.music163Url.split('playlist/')[1].split('?')[0]
+        }
+      }else {
         props.memo.music163Url = ''
       }
     }else{

@@ -120,11 +120,13 @@
 
     <div style="max-width: 100%">
       <ClientOnly>
-        <APlayer
+        <meting-js
             :key="musicBoxKey"
-            :songType="musicType"
-            :songId="musicId"
-            v-if="music163Url && music163Url !== '' && musicType && musicId"
+            :server="musicPlatform"
+            :type="musicType"
+            :id="musicId"
+            :list-folded="true"
+            v-if="music163Url && musicType && musicId"
         />
       </ClientOnly>
     </div>
@@ -380,19 +382,29 @@ const emit = defineEmits(['memo-added'])
 const music163Url = ref('')
 const musicType = ref('')
 const musicId = ref('')
+const musicPlatform = ref('netease')
 
 const importMusic = () => {
   if(music163Url.value.includes("music.163.com")){
     // 如果里面有playlist
     if(music163Url.value.includes("playlist")){
       musicType.value = 'playlist'
-      musicId.value = music163Url.value.split('playlist?id=')[1]
+      musicId.value = music163Url.value.split('playlist?id=')[1].split('&')[0]
     }else if(music163Url.value.includes("song")){
       musicType.value = 'song'
-      musicId.value = music163Url.value.split('song?id=')[1]
+      musicId.value = music163Url.value.split('song?id=')[1].split('&')[0]
     }else if(music163Url.value.includes("album")) {
       musicType.value = 'album'
-      musicId.value = music163Url.value.split('album?id=')[1]
+      musicId.value = music163Url.value.split('album?id=')[1].split('&')[0]
+    }
+  }else if(music163Url.value.includes("y.qq.com")){
+    musicPlatform.value = 'tencent'
+    if(music163Url.value.includes("songDetail")){
+      musicType.value = 'song'
+      musicId.value = music163Url.value.split('songDetail/')[1].split('?')[0]
+    }else if(music163Url.value.includes("playlist")){
+      musicType.value = 'playlist'
+      musicId.value = music163Url.value.split('playlist/')[1].split('?')[0]
     }
   }else{
     music163Url.value = ''
@@ -637,13 +649,22 @@ memoUpdateEvent.on((event: Memo) => {
     // 如果里面有playlist
     if(music163Url.value.includes("playlist")){
       musicType.value = 'playlist'
-      musicId.value = music163Url.value.split('playlist?id=')[1]
+      musicId.value = music163Url.value.split('playlist?id=')[1].split('&')[0]
     }else if(music163Url.value.includes("song")){
       musicType.value = 'song'
-      musicId.value = music163Url.value.split('song?id=')[1]
+      musicId.value = music163Url.value.split('song?id=')[1].split('&')[0]
     }else if(music163Url.value.includes("album")) {
       musicType.value = 'album'
-      musicId.value = music163Url.value.split('album?id=')[1]
+      musicId.value = music163Url.value.split('album?id=')[1].split('&')[0]
+    }
+  }else if(music163Url.value.includes("y.qq.com")){
+    musicPlatform.value = 'tencent'
+    if(music163Url.value.includes("songDetail")){
+      musicType.value = 'song'
+      musicId.value = music163Url.value.split('songDetail/')[1].split('?')[0]
+    }else if(music163Url.value.includes("playlist")){
+      musicType.value = 'playlist'
+      musicId.value = music163Url.value.split('playlist/')[1].split('?')[0]
     }
   }else{
     music163Url.value = ''

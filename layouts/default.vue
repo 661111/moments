@@ -165,6 +165,8 @@ onMounted(async () => {
   }
   const response = await $fetch('/api/user/settings/get?user=' + (findId == 'undefined' ? '0' : findId));
   const { data: res } = await useAsyncData('userinfo', async () => response);
+  // 将response存储systemConfig中
+  await useAsyncData('systemConfig', async () => response)
   if(res.value?.data.enableRegister){
     canRegister.value = true
   }

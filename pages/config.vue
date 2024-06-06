@@ -48,7 +48,12 @@
     </div>
 
     <div class="flex flex-col gap-2 qus-box">
-      <Label for="customLocation" class="font-bold">启用首页天气展示</Label>
+      <Label for="customWeather" class="font-bold">启用首页天气展示</Label>
+      <Switch id="customWeather" v-model:checked="state.customWeather" />
+    </div>
+
+    <div class="flex flex-col gap-2 qus-box">
+      <Label for="customLocation" class="font-bold">启用自定义位置</Label>
       <Switch id="customLocation" v-model:checked="state.customLocation" />
     </div>
 
@@ -403,7 +408,8 @@ const state = reactive({
   emailNewCommentNotification: '',
   emailNewReplyCommentNotification: '',
   emailNewMentionCommentNotification: '',
-  metingApi: ''
+  metingApi: '',
+  customWeather: false
 })
 
 const { data: res } = await useFetch<{ data: typeof state }>('/api/site/config/get',{key:'settings'})
@@ -452,6 +458,7 @@ state.emailNewCommentNotification = data?.emailNewCommentNotification || ''
 state.emailNewReplyCommentNotification = data?.emailNewReplyCommentNotification || ''
 state.emailNewMentionCommentNotification = data?.emailNewMentionCommentNotification || ''
 state.metingApi = data?.metingApi || ''
+state.customWeather = data.customWeather ? data.customWeather == "1" : false
 
 
 const uploadImgs = async (event: Event, id: string) => {

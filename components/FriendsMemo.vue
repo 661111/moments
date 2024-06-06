@@ -55,9 +55,7 @@
       </div>
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-1 mb-1 select-none">{{props.memo.location?.split(/\s+/g).join(' · ')}}</div>
       <div class="toolbar relative flex flex-row justify-between select-none my-1">
-        <div class="flex-1 text-gray text-xs text-[#9DA4B0] ">{{
-          dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
-            '') }}</div>
+        <div class="flex-1 text-gray text-xs text-[#9DA4B0] ">{{ timeFormateFunction(props.memo.createdAt) }}</div>
         <div @click="showToolbar = !showToolbar"
           class="toolbar-icon mb-2 px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
           <img src="~/assets/img/dian.svg" class="w-3 h-3" />
@@ -257,6 +255,13 @@ const copyShare = (path: string) => {
   });
 };
 
+const timeFormateFunction = (time: string) => {
+  if(timeFrontend && timeFrontend.value !== ''){
+    return dayjs(time).locale('zh-cn').format(timeFrontend.value)
+  }else{
+    return dayjs(time).locale('zh-cn').fromNow().replaceAll(/\s+/g, '')
+  }
+}
 const refreshAtpeople = async ()=>{
   if(props.memo.atpeople?.split(',')){
     atpeoplenickname.value = ''
@@ -288,6 +293,8 @@ onClickOutside(toolbarRef, () => {
   showToolbar.value = false
 })
 
+const timeFrontend = ref('')
+
 onMounted(async () => {
   if (token) {
     userId = useCookie('userId')
@@ -297,6 +304,11 @@ onMounted(async () => {
       navigator.clipboard.writeText(e.target.innerText).then(() => {
         toast.success('已复制到剪贴板')
       })
+    }
+  })
+  await $fetch('/api/user/settings/get').then((res) => {
+    if (res.success) {
+      timeFrontend.value = res.data.timeFrontend
     }
   })
 })

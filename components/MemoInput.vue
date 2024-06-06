@@ -144,6 +144,12 @@
             </PopoverTrigger>
             <PopoverContent class="w-auto">
               <div class="flex flex-row gap-2 text-sm">
+                <Input
+                    v-model="locationInfo"
+                    class="w-full"
+                    placeholder="请输入位置信息"
+                    v-if="showLocationInput"
+                />
                 <Button variant="outline" @click="updateLocation">自动获取</Button>
                 <Button variant="outline" @click="locationInfo = ''">清空</Button>
               </div>
@@ -334,6 +340,7 @@ import {
   ComboboxViewport
 } from "radix-vue";
 import {memo} from "@tanstack/virtual-core";
+import { useState, useAsyncData } from '#imports';
 const locationInfo = ref('');
 const inputs0 = ref('');
 const inputs1 = ref('');
@@ -672,7 +679,14 @@ memoUpdateEvent.on((event: Memo) => {
   music163Open.value = false
   musicBoxKey++
 })
-
+const showLocationInput = ref(false)
+onMounted(async () => {
+  await $fetch('/api/user/settings/get').then((res) => {
+    if (res.success) {
+      showLocationInput.value = (res.data.customLocation == "1")
+    }
+  })
+})
 
 const getTmpLocation = async () => {
   return new Promise(async (resolve, reject) => {

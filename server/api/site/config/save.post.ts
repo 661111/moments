@@ -47,6 +47,7 @@ type SaveConfigsReq = {
     emailNewReplyCommentNotification?: string,
     emailNewMentionCommentNotification?: string,
     metingApi?: string,
+    customWeather?: boolean,
 };
 
 export default defineEventHandler(async (event) => {
@@ -135,6 +136,7 @@ export default defineEventHandler(async (event) => {
     await updateSystemConfig("emailNewReplyCommentNotification", data.emailNewReplyCommentNotification||"");
     await updateSystemConfig("emailNewMentionCommentNotification", data.emailNewMentionCommentNotification||"");
     await updateSystemConfig("metingApi", data.metingApi||"");
+    await updateSystemConfig("customWeather", data.customWeather?'1':'0');
 
     return {
         success: true,

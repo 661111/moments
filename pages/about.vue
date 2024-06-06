@@ -18,7 +18,7 @@
     </div>
   </div>
   <div id="version-info">
-    当前版本: <span id="version">V0.4.3</span>
+    当前版本: <span id="version">V0.4.4</span>
     <div class="update-details">
       更新日志:
       <br/>
@@ -73,6 +73,8 @@
       ·V0.4.2 2024-05-28 图片放大查看时隐藏菜单按钮，修复切换页面时头图不切换的bug，修复fancybox在新插入文章的时候刷新机制出现问题，修复docker启动时不检查upload文件夹是否存在
       <br/>
       ·V0.4.3 2024-06-03 新增几个快捷标签，新增部分后台自定义选项，新增邮件模板，新增code样式点击可复制，新增个人页面css，个人js依旧不能自定义
+      <br/>
+      ·V0.4.4 2024-06-06 全新音乐播放器上线（QQ音乐、网易云音乐），由于特殊原因暂不支持vip歌曲，新增首页天气控件开关，位置自定义开关，时间格式自定义
     </div>
     <div onclick="window.open('https://randallanjie.com/', '_blank');">Powered By Randall</div>
   </div>

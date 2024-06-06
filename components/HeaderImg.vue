@@ -20,24 +20,26 @@
           />
         </div>
         <div class="flex flex-row items-center gap-4 justify-end">
-          <iframe
-              scrolling="no"
-              src="https://widget.tianqiapi.com/?style=tz&skin=pitaya&color=000"
-              frameborder="0"
-              width="200"
-              height="20"
-              allowtransparency="true"
-              v-if="colorMode.value === 'light'"
-          ></iframe>
-          <iframe
-              scrolling="no"
-              src="https://widget.tianqiapi.com/?style=tz&skin=pitaya&color=fff"
-              frameborder="0"
-              width="200"
-              height="20"
-              allowtransparency="true"
-              v-if="colorMode.value === 'dark'"
-          ></iframe>
+          <div v-if="shwoWeather">
+            <iframe
+                scrolling="no"
+                src="https://widget.tianqiapi.com/?style=tz&skin=pitaya&color=000"
+                frameborder="0"
+                width="200"
+                height="20"
+                allowtransparency="true"
+                v-if="colorMode.value === 'light'"
+            ></iframe>
+            <iframe
+                scrolling="no"
+                src="https://widget.tianqiapi.com/?style=tz&skin=pitaya&color=fff"
+                frameborder="0"
+                width="200"
+                height="20"
+                allowtransparency="true"
+                v-if="colorMode.value === 'dark'"
+            ></iframe>
+          </div>
           <div
               :key="user.headImgKey"
               class="slogon text-gray truncate w-full text-end text-xs mt-2"
@@ -77,13 +79,19 @@ async function fetchUserData(id: any) {
     user.headImgKey++; // Force re-render by changing key
   }
 }
-
+const shwoWeather = ref(false)
 onMounted(async () => {
   const url = window.location.pathname;
   if (url.startsWith('/user/')) {
     findId = url.split('/user/')[1];
   }
   await fetchUserData(findId);
+  await $fetch('/api/user/settings/get').then((res) => {
+    if (res.success) {
+      shwoWeather.value = (res.data.customWeather == "1")
+    }
+  })
+
 });
 
 settingsUpdateEvent.on(async () => {

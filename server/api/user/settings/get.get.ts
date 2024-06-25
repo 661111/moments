@@ -144,8 +144,10 @@ export default defineEventHandler(async (event) => {
   const data = {
     ...userData,
     ...configData,
+    "isadmin": event.context.userId === 1,
     ...Object.fromEntries(systemConfigData.map((item) => [item.key, item.value])),
   };
+
   return {
     success: true,
     data: data,

@@ -351,6 +351,10 @@ import { Select } from '~/components/ui/select'
 
 const response = await $fetch('/api/user/settings/get?user=0');
 
+if(!response.success || !response.data.isadmin){
+  navigateTo('/')
+}
+
 useHead({
   title: '设置-'+(response.data.title || 'Randall的小屋'),
 })

@@ -29,7 +29,6 @@ export default defineEventHandler(async (event) => {
   if (icons.length === 0) {
     icons = $("link[rel='apple-touch-icon']");
   }
-
   let href = "";
   const urlObject =  new URL(url)
   if (icons.length > 0) {
@@ -37,7 +36,9 @@ export default defineEventHandler(async (event) => {
   }else{
     href = urlObject.origin+'/favicon.ico';
   }
-  if (!href.startsWith("http")) {
+  if (href.startsWith("//")) {
+    href = urlObject.protocol + href;
+  } else if (!href.startsWith("http")) {
     href = urlObject.origin + (href.startsWith('/') ? href : '/'+href);
   }
 

@@ -186,9 +186,9 @@
                     <ComboboxAnchor class="min-w-[160px] inline-flex items-center justify-between rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] text-grass11 shadow-[0_2px_10px] shadow-black/10 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-grass9 outline-none">
                       <ComboboxInput
                           :modelValue="inputs0"
-                          @input="handleInput(0)"
+                          @input="handleInputDebounced(0, inputs0)"
                           @compositionstart="composing=true"
-                          @compositionend="composing = false;handleInput(0)"
+                          @compositionend="composing = false;handleInputDebounced(0, inputs0)"
                           @keydown.enter.prevent
                           class="!bg-transparent outline-none text-grass11 h-full selection:bg-grass5 placeholder-mauve8"
                           placeholder="请输入需要查询的用户"
@@ -259,9 +259,9 @@
                     <ComboboxAnchor class="min-w-[160px] inline-flex items-center justify-between rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] text-grass11 shadow-[0_2px_10px] shadow-black/10 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-grass9 outline-none">
                       <ComboboxInput
                           :modelValue="inputs1"
-                          @input="handleInput(1)"
+                          @input="handleInputDebounced(1, inputs1)"
                           @compositionstart="composing = true"
-                          @compositionend="composing = false;handleInput(1)"
+                          @compositionend="composing = false;handleInputDebounced(1, inputs1)"
                           @keydown.enter.prevent
                           class="!bg-transparent outline-none text-grass11 h-full selection:bg-grass5 placeholder-mauve8"
                           placeholder="请输入需要查询的用户"
@@ -355,13 +355,21 @@ const state = reactive({
 })
 let composing = false;
 
-const handleInput=(withMe :number) =>{
-  if(composing) {
+let debounceTimer: any = null;
+
+const handleInputDebounced = (withMe: number, inputs: string) => {
+  clearTimeout(debounceTimer);
+  const value = event.target.value;
+  debounceTimer = setTimeout(() => handleInput(withMe, value), 300); // 300ms为防抖时间，可以根据实际需求调整
+};
+
+const handleInput = (withMe: number, value: string) => {
+  if (composing) {
     return;
   }
   const inputs = withMe === 0 ? inputs0 : inputs1;
-  inputs.value = event.target.value;
-  if(inputs.value === '') {
+  inputs.value = value;
+  if (inputs.value === '') {
     state.options = [];
     return;
   }
@@ -378,7 +386,7 @@ const handleInput=(withMe :number) =>{
       state.options = [];
     }
   });
-}
+};
 
 const textareaRef = ref()
 const showEmojiRef = ref<HTMLElement>()

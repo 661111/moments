@@ -94,7 +94,7 @@ export default defineEventHandler(async (event) => {
 
     sendMailTemplate = sendMailTemplate.replaceAll('{Code}', verificationCode);
     sendMailTemplate = sendMailTemplate.replaceAll('{Email}', email);
-    sendMailTemplate = sendMailTemplate.replaceAll('Title', title.title==null?'moments':title.title);
+    sendMailTemplate = sendMailTemplate.replaceAll('{Site}', title.title==null?'moments':title.title);
     sendMailTemplate = sendMailTemplate.replaceAll('{Url}', title.siteUrl==null?(new URL(event.req.url, `http://${event.req.headers.host}`).origin):title.siteUrl);
 
     const sendData = {

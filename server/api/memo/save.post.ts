@@ -150,11 +150,11 @@ export default defineEventHandler(async (event) => {
             if(emailMentionNotification && emailMentionNotification.value && emailMentionNotification.value !== ''){
               tmpmsg = emailMentionNotification.value;
             }
-            tmpmsg = tmpmsg.replace('{Sitename}', siteConfig?.title);
-            tmpmsg = tmpmsg.replace('{SiteUrl}', siteUrl);
-            tmpmsg = tmpmsg.replace('{MemoUrl}', `${siteUrl}/detail/${result.id}`);
-            tmpmsg = tmpmsg.replace('{Nickname}', user?.nickname);
-            tmpmsg = tmpmsg.replace('{Content}', result.content);
+            tmpmsg = tmpmsg.replaceAll('{Sitename}', siteConfig?.title);
+            tmpmsg = tmpmsg.replaceAll('{SiteUrl}', siteUrl);
+            tmpmsg = tmpmsg.replaceAll('{MemoUrl}', `${siteUrl}/detail/${result.id}`);
+            tmpmsg = tmpmsg.replaceAll('{Nickname}', user?.nickname);
+            tmpmsg = tmpmsg.replaceAll('{Content}', result.content);
             sendEmail({
               email: userat.eMail,
               subject: '新提及',

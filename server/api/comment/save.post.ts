@@ -181,13 +181,13 @@ export default defineEventHandler(async (event) => {
                 if(emailNewReplyCommentNotification && emailNewReplyCommentNotification.value && emailNewReplyCommentNotification.value !== ''){
                     tmpmsg = emailNewReplyCommentNotification.value;
                 }
-                tmpmsg = tmpmsg.replace('{Sitename}', siteConfig?.title)
-                    .replace('{SiteUrl}', siteUrl)
-                    .replace('{MemoUrl}', `${siteUrl}/detail/${memoId}`)
-                    .replace('{Nickname}', username)
-                    .replace('{Content}', content)
-                    .replace('{OriginalContent}', comment.content || '')
-                    .replace('{Memo}', memo?.content || '');
+                tmpmsg = tmpmsg.replaceAll('{Sitename}', siteConfig?.title)
+                    .replaceAll('{SiteUrl}', siteUrl)
+                    .replaceAll('{MemoUrl}', `${siteUrl}/detail/${memoId}`)
+                    .replaceAll('{Nickname}', username)
+                    .replaceAll('{Content}', content)
+                    .replaceAll('{OriginalContent}', comment.content || '')
+                    .replaceAll('{Memo}', memo?.content || '');
                 // 邮箱通知被回复者
                 if(siteConfig?.enableEmail){
                     sendEmail({
@@ -228,12 +228,12 @@ export default defineEventHandler(async (event) => {
                         if(emailNewMentionCommentNotification && emailNewMentionCommentNotification.value && emailNewMentionCommentNotification.value !== ''){
                             tmpmsg = emailNewMentionCommentNotification.value;
                         }
-                        tmpmsg = tmpmsg.replace('{Sitename}', siteConfig?.title)
-                            .replace('{SiteUrl}', siteUrl)
-                            .replace('{MemoUrl}', `${siteUrl}/detail/${memoId}`)
-                            .replace('{Nickname}', username)
-                            .replace('{Content}', content)
-                            .replace('{Memo}', memo?.content || '');
+                        tmpmsg = tmpmsg.replaceAll('{Sitename}', siteConfig?.title)
+                            .replaceAll('{SiteUrl}', siteUrl)
+                            .replaceAll('{MemoUrl}', `${siteUrl}/detail/${memoId}`)
+                            .replaceAll('{Nickname}', username)
+                            .replaceAll('{Content}', content)
+                            .replaceAll('{Memo}', memo?.content || '');
                         sendEmail({
                             email: userat.eMail,
                             subject: '新提及',
@@ -273,12 +273,12 @@ export default defineEventHandler(async (event) => {
                 if(emailNewCommentNotification && emailNewCommentNotification.value && emailNewCommentNotification.value !== ''){
                     tmpmsg = emailNewCommentNotification.value;
                 }
-                tmpmsg = tmpmsg.replace('{Sitename}', siteConfig?.title)
-                    .replace('{SiteUrl}', siteUrl)
-                    .replace('{MemoUrl}', `${siteUrl}/detail/${memoId}`)
-                    .replace('{Nickname}', username)
-                    .replace('{Content}', content)
-                    .replace('{Memo}', memo?.content || '');
+                tmpmsg = tmpmsg.replaceAll('{Sitename}', siteConfig?.title)
+                    .replaceAll('{SiteUrl}', siteUrl)
+                    .replaceAll('{MemoUrl}', `${siteUrl}/detail/${memoId}`)
+                    .replaceAll('{Nickname}', username)
+                    .replaceAll('{Content}', content)
+                    .replaceAll('{Memo}', memo?.content || '');
                 sendEmail({
                     email: user.eMail || process.env.NOTIFY_MAIL || '',
                     subject: '新评论',

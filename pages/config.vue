@@ -241,7 +241,7 @@
             <Label for="emailNewCommentNotification" class="font-bold">新评论模板</Label>
             <div class="tooltip">
                   <span class="tooltip-text">
-                    邮件模板变量：<br />{Memo} 原文内容 <br />{Content} 回复内容 <br />{Nickname} 评论用户昵称 <br />{Sitename} 网站名称 <br />{SiteUrl} 网站Url <br />{MemoUrl} MemoUrl
+                    邮件模板变量：<br />{Memo} 原文内容 <br />{Content} 评论内容 <br />{Nickname} 评论用户昵称 <br />{Sitename} 网站名称 <br />{SiteUrl} 网站Url <br />{MemoUrl} MemoUrl
                   </span>
               <div class="circle">
                 <span class="exclamation">!</span>

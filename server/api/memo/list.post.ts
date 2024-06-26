@@ -4,11 +4,12 @@ import {context} from "esbuild";
 type ListMemoReq = {
   user: any;
   tagname: any;
+  searchname: any;
   page: number;
 };
 
 export default defineEventHandler(async (event) => {
-  let { user, page, tagname } = (await readBody(event)) as ListMemoReq;
+  let { user, page, tagname, searchname } = (await readBody(event)) as ListMemoReq;
   user = parseInt(user);
   if (user) {
     const userExist = await prisma.user.findUnique({
@@ -100,7 +101,7 @@ export default defineEventHandler(async (event) => {
         userId: 1,
         pinned: true,
         content: {
-          contains: tagname? '#'+tagname: '',
+          contains: tagname? '#'+tagname: (searchname? searchname: ''),
         },
         OR: [
           {
@@ -167,7 +168,7 @@ export default defineEventHandler(async (event) => {
           },
         ],
         content: {
-          contains: tagname? '#'+tagname: '',
+          contains: tagname? '#'+tagname: (searchname? searchname: ''),
         },
       },
       orderBy: [
@@ -193,7 +194,7 @@ export default defineEventHandler(async (event) => {
     where: {
       userId: user ? user : undefined,
       content: {
-        contains: tagname? '#'+tagname: '',
+        contains: tagname? '#'+tagname: (searchname? searchname: ''),
       },
       OR: [
         {

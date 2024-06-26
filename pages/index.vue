@@ -3,7 +3,18 @@
   <div>
 
     <MemoInput v-if="token" @memo-added="firstLoad"/>
-
+    <div class="flex-1 flex flex-row gap-2 items-center px-10 py-5 input-div">
+      <Input
+          v-model="search"
+          class="w-full"
+          placeholder=""
+          @keyup.enter="searchMemo"
+      />
+      <Button
+          variant="outline"
+          @click="searchMemo"
+      >搜索</Button>
+    </div>
     <div class="content flex flex-col divide-y divide-[#C0BEBF]/10 gap-2">
       <div v-if="state.memoList.length === 0 && !token" class="text-center">
         <div class="my-2 text-sm">什么也没有,赶紧去登录发表Moments吧!</div>
@@ -28,10 +39,19 @@ import { type User, type Memo } from '~/lib/types';
 import { onMounted, onUnmounted, watch, ref } from 'vue';
 import jsonp from 'jsonp';
 import {toast} from "vue-sonner";
+import {Button} from "~/components/ui/button";
 
 const getMore = ref(null);
 const token = useCookie('token')
 let observer: IntersectionObserver | null = null;
+
+const search = ref('');
+
+const searchMemo = async () => {
+  if(search.value && search.value!==''){
+    navigateTo('/search/'+search.value)
+  }
+}
 
 onMounted(async () => {
   await firstLoad();
@@ -438,7 +458,11 @@ const welcome = async () => {
 
 </script>
 
-<style scoped></style>
-<style>
-
+<style scoped>
+.input-div {
+  border-bottom: rgb(192 190 191 / 0.1) 1px solid;
+}
+.dark.input-div{
+  border-bottom: #2d2d2d 1px solid;
+}
 </style>

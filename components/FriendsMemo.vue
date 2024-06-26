@@ -475,9 +475,15 @@ const showLess = () => {
 const colorMode = useColorMode()
 
 const replaceNewLinesExceptInCodeBlocks = (text: string) => {
+  let flag = false
+  // 如果最后结束的是```,添加一个换行
+  if (text.endsWith('```')) {
+    text += '\n'
+    flag = true
+  }
   // 保存代码块内容
   let codeBlocks: any = [];
-  text = text.replace(/```([^\n]*)\n([\s\S]*?)```/g, function (match: string, lang: string, code: string) {
+  text = text.replace(/```([^\n]*)\n([\s\S]*?)```\n/g, function (match: string, lang: string, code: string) {
     codeBlocks.push({ lang, code });
     return `<<code-block-${codeBlocks.length - 1}>>`;
   });
@@ -516,6 +522,10 @@ const replaceNewLinesExceptInCodeBlocks = (text: string) => {
     const { lang, code } = codeBlocks[index];
     return `<pre><code class='code-block ${lang}'>${code}</code></pre>`;
   });
+
+  if (flag) {
+    text = text.slice(0, -1)
+  }
 
   return DOMPurify.sanitize(text, { ALLOWED_TAGS: ['a', 'p', 'span', 'ul', 'ol', 'li', 'img', 'strong', 'em', 'del', 'blockquote', 'code', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'iframe', 'input'] });
 };

@@ -476,7 +476,6 @@ const colorMode = useColorMode()
 
 const replaceNewLinesExceptInCodeBlocks = (text: string) => {
   let flag = false
-  // 如果最后结束的是```,添加一个换行
   if (text.endsWith('```')) {
     text += '\n'
     flag = true

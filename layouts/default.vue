@@ -110,6 +110,15 @@
 
                 <DropdownMenuSeparator class="h-[1px] bg-green6 m-[5px]" />
 
+<!--                <DropdownMenuItem-->
+<!--                    class="group text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"-->
+<!--                    @click="translate.setUseVersion2();translate.execute();"-->
+<!--                >-->
+<!--                  中英文切换-->
+<!--                </DropdownMenuItem>-->
+
+<!--                <DropdownMenuSeparator class="h-[1px] bg-green6 m-[5px]" />-->
+
                 <DropdownMenuArrow class="fill-white" />
               </DropdownMenuContent>
             </DropdownMenuPortal>
@@ -207,6 +216,10 @@ onMounted(async () => {
   window.addEventListener('menurefresh', () => {
     userId.value = useCookie('userId').value
   })
+  const script = document.createElement('script');
+  script.src = 'https://cdn.staticfile.net/translate.js/3.2.3/translate.js';
+  script.async = true;
+  document.body.appendChild(script);
 })
 
 const logout = () => {
@@ -239,6 +252,7 @@ body::-webkit-scrollbar, html::-webkit-scrollbar {
 }
 
 div.tigger {
+  max-width: 100%;
   position: absolute;
   right: 10px;
   bottom: 10px;

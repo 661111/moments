@@ -119,6 +119,14 @@ watchOnce(height, () => {
 const replaceNewLinesExceptInCodeBlocks = (text: any) => {
   text = text.replaceAll(/#(\S+)/g, '[#$1](/tags/$1)');
 
+  text = text.replace(/```([^\n]*)\n([\s\S]*?)```/g, function (match: string, lang: string, code: string) {
+    if(lang) {
+      return lang + '\n' + code;
+    }else{
+      return code;
+    }
+  });
+
   // 将链接转换为a标签
   text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
 

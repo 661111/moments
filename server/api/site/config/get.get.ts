@@ -47,21 +47,30 @@ export default defineEventHandler(async (event) => {
         throw new Error("Info not found");
     }
 
-    let configData = await prisma.systemConfig.findMany({
-        where: {
-            type: {
-                in: [1,2]
-            }
-        },
-    });
+    let configData;
+
 
     if(event.context.userId == 1){
+        configData = await prisma.systemConfig.findMany({
+            where: {
+                type: {
+                    in: [1,2]
+                }
+            },
+        });
         data = {
             notification,
             ...data,
             ...Object.fromEntries(configData.map((item) => [item.key, item.value])),
         }
     }else{
+        configData = await prisma.systemConfig.findMany({
+            where: {
+                type: {
+                    in: [1]
+                }
+            },
+        });
         data = {
             notification,
             enableS3: data.enableS3,

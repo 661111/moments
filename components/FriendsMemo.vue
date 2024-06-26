@@ -1,6 +1,6 @@
 <template>
 
-  <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 p-2 sm:p-4" :class="{'bg-slate-100 dark:bg-neutral-900':props.memo.pinned && props.memo.userId == 1}">
+  <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 p-2 sm:p-4" :class="{'bg-slate-100 dark:bg-neutral-900':props.memo.pinned && props.memo.userId == 1}" style="max-width: 100vw">
     <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" @click="gotouser" />
     <div class="flex flex-col gap-.5 flex-1 overflow-auto">
       <div class="flex flex-row justify-between items-center">
@@ -561,7 +561,6 @@ const gotouser = () => {
   width: 100%;
   overflow: hidden;
   box-sizing: border-box;
-  overflow-x: auto;
 }
 
 .words-container a{
@@ -589,6 +588,7 @@ const gotouser = () => {
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.875rem;
   line-height: 1.25rem;
+  overflow-x: auto;
 }
 
 pre {

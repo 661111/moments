@@ -78,49 +78,56 @@
     </div>
 
     <div class="flex flex-col gap-2 qus-box">
-      <Label for="enableS3" class="font-bold">启用S3存储</Label>
-      <Switch id="enableS3" v-model:checked="state.enableS3" />
+      <div class="flex">
+        <Label for="aboutHtml" class="font-bold">关于页自定义</Label>
+      </div>
+      <Textarea id="aboutHtml" v-model="state.aboutHtml" rows="3"></Textarea>
     </div>
 
-    <template v-if="state.enableS3">
-      <div class="config-container">
-        <div class="flex flex-col gap-2 qus-box">
-          <Label for="domain" class="font-bold">域名</Label>
-          <Input type="text" id="domain" placeholder="S3 CDN域名" autocomplete="off" v-model="state.domain" />
-        </div>
+<!--    <div class="flex flex-col gap-2 qus-box">-->
+<!--      <Label for="enableS3" class="font-bold">启用S3存储</Label>-->
+<!--      <Switch id="enableS3" v-model:checked="state.enableS3" />-->
+<!--    </div>-->
 
-        <div class="flex flex-col gap-2 qus-box">
-          <Label for="bucket" class="font-bold">桶名</Label>
-          <Input type="text" id="bucket" placeholder="bucket" autocomplete="off" v-model="state.bucket" />
-        </div>
+<!--    <template v-if="state.enableS3">-->
+<!--      <div class="config-container">-->
+<!--        <div class="flex flex-col gap-2 qus-box">-->
+<!--          <Label for="domain" class="font-bold">域名</Label>-->
+<!--          <Input type="text" id="domain" placeholder="S3 CDN域名" autocomplete="off" v-model="state.domain" />-->
+<!--        </div>-->
 
-        <div class="flex flex-col gap-2 qus-box">
-          <Label for="region" class="font-bold">地区</Label>
-          <Input type="text" id="region" placeholder="" autocomplete="off" v-model="state.region" />
-        </div>
+<!--        <div class="flex flex-col gap-2 qus-box">-->
+<!--          <Label for="bucket" class="font-bold">桶名</Label>-->
+<!--          <Input type="text" id="bucket" placeholder="bucket" autocomplete="off" v-model="state.bucket" />-->
+<!--        </div>-->
 
-        <div class="flex flex-col gap-2 qus-box">
-          <Label for="accessKey" class="font-bold">accessKey</Label>
-          <Input type="text" id="accessKey" placeholder="" autocomplete="off" v-model="state.accessKey" />
-        </div>
+<!--        <div class="flex flex-col gap-2 qus-box">-->
+<!--          <Label for="region" class="font-bold">地区</Label>-->
+<!--          <Input type="text" id="region" placeholder="" autocomplete="off" v-model="state.region" />-->
+<!--        </div>-->
 
-        <div class="flex flex-col gap-2 qus-box">
-          <Label for="secretKey" class="font-bold">secretKey</Label>
-          <Input type="text" id="secretKey" placeholder="" autocomplete="off" v-model="state.secretKey" />
-        </div>
+<!--        <div class="flex flex-col gap-2 qus-box">-->
+<!--          <Label for="accessKey" class="font-bold">accessKey</Label>-->
+<!--          <Input type="text" id="accessKey" placeholder="" autocomplete="off" v-model="state.accessKey" />-->
+<!--        </div>-->
 
-        <div class="flex flex-col gap-2 qus-box">
-          <Label for="endpoint" class="font-bold">S3接口地址</Label>
-          <Input type="text" id="endpoint" placeholder="" autocomplete="off" v-model="state.endpoint" />
-        </div>
+<!--        <div class="flex flex-col gap-2 qus-box">-->
+<!--          <Label for="secretKey" class="font-bold">secretKey</Label>-->
+<!--          <Input type="text" id="secretKey" placeholder="" autocomplete="off" v-model="state.secretKey" />-->
+<!--        </div>-->
 
-        <div class="flex flex-col gap-2 qus-box">
-          <Label for="thumbnailSuffix" class="font-bold">后缀</Label>
-          <Input type="text" id="thumbnailSuffix" placeholder="" autocomplete="off" v-model="state.thumbnailSuffix" />
-        </div>
-      </div>
+<!--        <div class="flex flex-col gap-2 qus-box">-->
+<!--          <Label for="endpoint" class="font-bold">S3接口地址</Label>-->
+<!--          <Input type="text" id="endpoint" placeholder="" autocomplete="off" v-model="state.endpoint" />-->
+<!--        </div>-->
 
-    </template>
+<!--        <div class="flex flex-col gap-2 qus-box">-->
+<!--          <Label for="thumbnailSuffix" class="font-bold">后缀</Label>-->
+<!--          <Input type="text" id="thumbnailSuffix" placeholder="" autocomplete="off" v-model="state.thumbnailSuffix" />-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </template>-->
 
     <div class="flex flex-col gap-2 qus-box">
       <Label for="enableEmail" class="font-bold">启用邮箱</Label>
@@ -413,7 +420,8 @@ const state = reactive({
   emailNewReplyCommentNotification: '',
   emailNewMentionCommentNotification: '',
   metingApi: '',
-  customWeather: false
+  customWeather: false,
+  aboutHtml: ''
 })
 
 const { data: res } = await useFetch<{ data: typeof state }>('/api/site/config/get',{key:'settings'})
@@ -463,6 +471,7 @@ state.emailNewReplyCommentNotification = data?.emailNewReplyCommentNotification 
 state.emailNewMentionCommentNotification = data?.emailNewMentionCommentNotification || ''
 state.metingApi = data?.metingApi || ''
 state.customWeather = data.customWeather ? data.customWeather == "1" : false
+state.aboutHtml = data?.aboutHtml || ''
 
 
 const uploadImgs = async (event: Event, id: string) => {

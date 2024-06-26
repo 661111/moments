@@ -49,7 +49,9 @@ export default defineEventHandler(async (event) => {
 
     let configData = await prisma.systemConfig.findMany({
         where: {
-            type: 1,
+            type: {
+                in: [1,2]
+            }
         },
     });
 

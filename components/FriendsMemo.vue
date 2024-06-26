@@ -615,6 +615,12 @@ pre {
   line-height: 1.25rem;
   box-sizing: border-box;
   white-space: pre;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+pre::-webkit-scrollbar {
+  display: none !important;
 }
 
 pre code {

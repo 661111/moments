@@ -1,25 +1,14 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
 <div>
   <HeaderImg />
-  <div class="flex flex-col gap-4 p-2 sm:p-4">
-
-    <div class="flex flex-col gap-2">
-      <Label for="" class="font-bold">项目说明</Label>
-      <div class="flex flex-col gap-2">
-        <div>这是一个基于Vue3/Nuxt3的开源项目，用于朋友圈、留言板等功能。</div>
-        <div>本项目Fork自大佬<a href="https://github.com/kingwrcy" target="_blank">kingwrcy</a>的<a href="https://github.com/kingwrcy/moments" target="_blank">moments</a></div>
-        <div>项目地址：<a href="https://github.com/RandallAnjie/moments" target="_blank">https://github.com/RandallAnjie/moments</a></div>
-        <div>项目演示：<a href="https://moments.randallanjie.com/" target="_blank">https://moments.randallanjie.com/</a></div>
-      </div>
-    </div>
-  </div>
+  <div class="flex flex-col gap-4 p-2 sm:p-4" v-html="content"></div>
   <div id="version-info">
-    当前版本: <span id="version">V0.4.4</span>
+    当前版本: <span id="version">V0.4.5</span>
     <div class="update-details">
+      <div>这是一个基于Vue3/Nuxt3的开源项目，用于朋友圈、留言板等功能。</div>
+      <div>本项目Fork自大佬<a href="https://github.com/kingwrcy" target="_blank">kingwrcy</a>的<a href="https://github.com/kingwrcy/moments" target="_blank">moments</a></div>
+      <div>项目地址：<a href="https://github.com/RandallAnjie/moments" target="_blank">https://github.com/RandallAnjie/moments</a></div>
+      <div>项目演示：<a href="https://moments.randallanjie.com/" target="_blank">https://moments.randallanjie.com/</a></div>
       更新日志:
       <br/>
       ·V0.1.0 2024-04-22 创建模板
@@ -75,11 +64,26 @@
       ·V0.4.3 2024-06-03 新增几个快捷标签，新增部分后台自定义选项，新增邮件模板，新增code样式点击可复制，新增个人页面css，个人js依旧不能自定义
       <br/>
       ·V0.4.4 2024-06-06 全新音乐播放器上线（QQ音乐、网易云音乐），由于特殊原因暂不支持vip歌曲，新增首页天气控件开关，位置自定义开关，时间格式自定义
+      <br/>
+      ·V0.4.5 开发中... 更新自动生成jwtkey，新增Memo对代码段的适配，取消对s3存储的支持，修复一堆bug
     </div>
     <div onclick="window.open('https://randallanjie.com/', '_blank');">Powered By Randall</div>
   </div>
 </div>
 </template>
+
+<script setup lang="ts">
+
+const content = ref('')
+
+await $fetch('/api/site/about/get').then((res) => {
+  if(res.success) {
+    content.value = res.data
+  }
+})
+
+
+</script>
 
 <style scoped>
 #version-info {

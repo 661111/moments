@@ -48,6 +48,7 @@ type SaveConfigsReq = {
     emailNewMentionCommentNotification?: string,
     metingApi?: string,
     customWeather?: boolean,
+    aboutHtml?: string,
 };
 
 export default defineEventHandler(async (event) => {
@@ -124,19 +125,20 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    await updateSystemConfig("mailVerificationCodeType", data.mailVerificationCodeType?.toString()||"1");
-    await updateSystemConfig("enableRegister", data.enableRegister?'1':'0');
-    await updateSystemConfig("timeFrontend", data?.timeFrontend||"");
-    await updateSystemConfig("customLocation", data.customLocation?'1':'0');
-    await updateSystemConfig("emailRegistrationContent", data.emailRegistrationContent||"");
-    await updateSystemConfig("emailChangeContent", data.emailChangeContent||"");
-    await updateSystemConfig("emailResetContent", data.emailResetContent||"");
-    await updateSystemConfig("emailMentionNotification", data.emailMentionNotification||"");
-    await updateSystemConfig("emailNewCommentNotification", data.emailNewCommentNotification||"");
-    await updateSystemConfig("emailNewReplyCommentNotification", data.emailNewReplyCommentNotification||"");
-    await updateSystemConfig("emailNewMentionCommentNotification", data.emailNewMentionCommentNotification||"");
-    await updateSystemConfig("metingApi", data.metingApi||"");
-    await updateSystemConfig("customWeather", data.customWeather?'1':'0');
+    await updateSystemConfig("mailVerificationCodeType", data.mailVerificationCodeType?.toString()||"1", 1);
+    await updateSystemConfig("enableRegister", data.enableRegister?'1':'0', 1);
+    await updateSystemConfig("timeFrontend", data?.timeFrontend||"", 1);
+    await updateSystemConfig("customLocation", data.customLocation?'1':'0', 1);
+    await updateSystemConfig("emailRegistrationContent", data.emailRegistrationContent||"", 1);
+    await updateSystemConfig("emailChangeContent", data.emailChangeContent||"", 1);
+    await updateSystemConfig("emailResetContent", data.emailResetContent||"", 1);
+    await updateSystemConfig("emailMentionNotification", data.emailMentionNotification||"", 1);
+    await updateSystemConfig("emailNewCommentNotification", data.emailNewCommentNotification||"", 1);
+    await updateSystemConfig("emailNewReplyCommentNotification", data.emailNewReplyCommentNotification||"", 1);
+    await updateSystemConfig("emailNewMentionCommentNotification", data.emailNewMentionCommentNotification||"", 1);
+    await updateSystemConfig("metingApi", data.metingApi||"", 1);
+    await updateSystemConfig("customWeather", data.customWeather?'1':'0', 1);
+    await updateSystemConfig("aboutHtml", data.aboutHtml||"", 2);
 
     return {
         success: true,
@@ -145,7 +147,7 @@ export default defineEventHandler(async (event) => {
 });
 
 
-async function updateSystemConfig(key: string, value: string){
+async function updateSystemConfig(key: string, value: string, type: number){
     const record = await prisma.systemConfig.findFirst({
         where: {
             key: key,
@@ -157,13 +159,14 @@ async function updateSystemConfig(key: string, value: string){
                 id: record.id,
             },
             data: {
+                type: type,
                 value: value,
             },
         });
     }else{
         await prisma.systemConfig.create({
             data: {
-                type: 1,
+                type: type,
                 key: key,
                 value: value,
             },

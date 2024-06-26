@@ -2,7 +2,7 @@
 
   <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 p-2 sm:p-4" :class="{'bg-slate-100 dark:bg-neutral-900':props.memo.pinned && props.memo.userId == 1}">
     <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" @click="gotouser" />
-    <div class="flex flex-col gap-.5 flex-1">
+    <div class="flex flex-col gap-.5 flex-1 overflow-auto">
       <div class="flex flex-row justify-between items-center">
         <div class="username text-[#576b95] cursor-default mb-1 dark:text-white" @click="gotouser">{{ props.memo.user.nickname }}</div>
         <Pin :size=14 v-if="props.memo.pinned && props.memo.userId == 1" />
@@ -474,42 +474,49 @@ const showLess = () => {
 
 const colorMode = useColorMode()
 
-const replaceNewLinesExceptInCodeBlocks = (text: any) => {
-  text = text.replaceAll(/#(\S+)/g, '[#$1](/tags/$1)');
+const replaceNewLinesExceptInCodeBlocks = (text: string) => {
+  // 保存代码块内容
+  let codeBlocks: any = [];
+  text = text.replace(/```([^\n]*)\n([\s\S]*?)```/g, function (match: string, lang: string, code: string) {
+    codeBlocks.push({ lang, code });
+    return `<<code-block-${codeBlocks.length - 1}>>`;
+  });
 
-  // 将链接转换为a标签
+  // Markdown链接转换为a标签
+  text = text.replaceAll(/#(\S+)/g, '[#$1](/tags/$1)');
   text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
 
-  // 处理粗体、斜体、删除线、单词块
-  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // 粗体
-  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>'); // 斜体
-  text = text.replace(/~~(.*?)~~/g, '<del>$1</del>'); // 删除线
-  text = text.replace(/`(.*?)`/g, '<code>$1</code>'); // 单词块
+  // 格式化粗体、斜体、删除线、代码
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  text = text.replace(/~~(.*?)~~/g, '<del>$1</del>');
+  text = text.replace(/`(.*?)`/g, `<code class='code-character'>$1</code>`);
 
-  // 处理待办事项框
-  text = text.replace(/^\[ \] (.*?)(?=\n|$)/gmi, '<input type="checkbox" disabled> $1'); // 未完成
-  text = text.replace(/^\[[xX]\] (.*?)(?=\n|$)/gmi, '<input type="checkbox" checked disabled> $1'); // 完成
+  // 处理待办事项
+  text = text.replace(/^\[ \] (.*?)(?=\n|$)/gmi, '<input type="checkbox" disabled> $1');
+  text = text.replace(/^\[[xX]\] (.*?)(?=\n|$)/gmi, '<input type="checkbox" checked disabled> $1');
 
-  // 将text根据换行符分割成数组
-  const spices = text.split('\n');
-  for (let j = 0; j < spices.length; j++) {
-    if (spices[j].startsWith('![')) {
-      const img = spices[j].match(/!\[(.*?)\]\((.*?)\)/);
-      if (img) {
-        spices[j] = `<img src="${img[2]}" alt="${img[1]}" class="cursor-pointer" @click="navigateTo('${img[2]}')"/>`;
-      }
-    } else if (/^\d+\./.test(spices[j])) {
-      spices[j] = '<p>' + spices[j] + '</p>';
-    } else if (/^-/.test(spices[j])) {
-      spices[j] = '<li>' + spices[j].replace(/^-/, '') + '</li>';
+  // 切割文本并处理列表等
+  const lines = text.split('\n');
+  text = lines.map(line => {
+    if (line.startsWith('![')) {
+      const img = line.match(/!\[(.*?)\]\((.*?)\)/);
+      return `<img src="${img[2]}" alt="${img[1]}" class="cursor-pointer" @click="navigateTo('${img[2]}')"/>`;
+    } else if (/^\d+\./.test(line)) {
+      return '<p>' + line + '</p>';
+    } else if (/^-/.test(line)) {
+      return '<li>' + line.replace(/^-/, '') + '</li>';
     } else {
-      spices[j] = '<span>' + spices[j] + '</span><br />';
+      return '<span>' + line + '</span><br />';
     }
-  }
-  text = spices.join('');
-  if (text.endsWith('<br />')) {
-    text = text.substring(0, text.length - 6);
-  }
+  }).join('');
+
+  // 恢复代码块并使用code标签包裹
+  text = text.replace(/<<code-block-(\d+)>>/g, function (match, index) {
+    const { lang, code } = codeBlocks[index];
+    return `<pre><code class='code-block ${lang}'>${code}</code></pre>`;
+  });
+
   return DOMPurify.sanitize(text, { ALLOWED_TAGS: ['a', 'p', 'span', 'ul', 'ol', 'li', 'img', 'strong', 'em', 'del', 'blockquote', 'code', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'iframe', 'input'] });
 };
 
@@ -551,6 +558,10 @@ const gotouser = () => {
 .words-container{
   word-break: break-all;
   white-space: pre-wrap;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  overflow-x: auto;
 }
 
 .words-container a{
@@ -569,34 +580,58 @@ const gotouser = () => {
   margin-left: 0;
 }
 
-/* 样式定义 */
-.words-container code {
-  background-color: #f0f0f0; /* 浅灰色背景 */
-  color: #00a7a7; /* 蓝绿色字体颜色 */
+
+.code-character {
+  background-color: #f0f0f0;
+  color: #00a7a7;
   padding: 2px 4px;
-  border-radius: 4px; /* 圆润边角 */
+  border-radius: 4px;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 0.875rem; /* 调整字体大小 */
-  line-height: 1.25rem; /* 调整行高 */
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
+
+pre {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background-color: #f0f0f0;
+  color: #00a7a7;
+  padding: 8px;
+  border-radius: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-sizing: border-box;
+  white-space: pre;
+}
+
+pre code {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+  display: block;
+}
+
 
 .words-container input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
-  width: 16px; /* 调整复选框宽度 */
-  height: 16px; /* 调整复选框高度 */
-  border: 2px solid #00a7a7; /* 蓝绿色边框 */
+  width: 16px;
+  height: 16px;
+  border: 2px solid #00a7a7;
   border-radius: 3px;
-  background-color: #fff; /* 白色背景 */
-  transform: translate(0, 20%); /* 使对勾符号居中 */
+  background-color: #fff;
+  transform: translate(0, 20%);
   cursor: pointer;
   position: relative;
   margin-right: 8px;
 }
 
 .words-container input[type="checkbox"]:checked {
-  background-color: #00a7a7; /* 选中时蓝绿色背景 */
-  border: 2px solid #00a7a7; /* 选中时蓝绿色边框 */
+  background-color: #00a7a7;
+  border: 2px solid #00a7a7;
 
 }
 
@@ -604,31 +639,36 @@ const gotouser = () => {
   content: '✔';
   color: #fff;
   position: absolute;
-  top: 50%; /* 调整对勾符号的位置 */
-  left: 50%; /* 调整对勾符号的位置 */
-  transform: translate(-50%, -50%); /* 使对勾符号居中 */
-  font-size: 14px; /* 调整对勾符号的字体大小 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
   line-height: 1.25;
 }
 
-.dark .words-container code {
-  background-color: #2d2d2d; /* 深灰色背景 */
-  color: #66d9ef; /* 浅蓝绿色字体颜色 */
+.dark .code-character{
+  background-color: #2d2d2d;
+  color: #66d9ef;
+}
+
+.dark pre {
+  background-color: #2d2d2d;
+  color: #66d9ef;
 }
 
 .dark .words-container input[type="checkbox"] {
-  border: 2px solid #66d9ef; /* 浅蓝绿色边框 */
+  border: 2px solid #66d9ef;
   background-color: #2d2d2d; /* 深灰色背景 */
 }
 
 .dark .words-container input[type="checkbox"]:checked {
-  background-color: #66d9ef; /* 选中时浅蓝绿色背景 */
-  border: 2px solid #66d9ef; /* 选中时浅蓝绿色边框 */
+  background-color: #66d9ef;
+  border: 2px solid #66d9ef;
 }
 
 .aplayer-body {
-  max-width: 100%; /* 限制宽度不超过父容器 */
-  width: 100%; /* 自动调整宽度 */
+  max-width: 100%;
+  width: 100%;
 }
 
 .aplayer-pic{
@@ -654,7 +694,7 @@ const gotouser = () => {
 }
 
 .aplayer-lrc {
-  margin-top: 25px !important; /* 调整歌词与播放器的间距 */
+  margin-top: 25px !important;
 }
 
 </style>

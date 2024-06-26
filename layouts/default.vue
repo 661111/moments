@@ -244,7 +244,6 @@ div.tigger {
   bottom: 10px;
 }
 
-
 @media (min-width: 1024px) {
   div.tigger {
     width: calc((100vw - 480px)/2);

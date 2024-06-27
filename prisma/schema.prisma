@@ -3,13 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = env("DATABASE_TYPE")
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Comment {
   id        Int      @id @default(autoincrement())
-  content   String?
+  content   String? @db.Text
   replyTo   String?
   username  String?
   email     String?

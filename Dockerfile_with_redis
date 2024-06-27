@@ -16,7 +16,7 @@ ENV REDIS_HOST=127.0.0.1
 ENV REDIS_PORT=6379
 ENV REDIS_PASSWORD=
 ENV REDIS_DATABASE=0
-RUN npx prisma migrate dev --name v0_4_4
+RUN npx prisma migrate dev --name v0_4_5
 RUN npm run build
 RUN rm -rf /app/data/db.sqlite
 RUN apt install redis-server -y

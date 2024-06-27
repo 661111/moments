@@ -16,7 +16,7 @@ ENV REDIS_HOST=redis
 ENV REDIS_PORT=6379
 ENV REDIS_PASSWORD=
 ENV REDIS_DATABASE=0
-RUN npx prisma migrate dev --name v0_4_4
+RUN npx prisma migrate dev --name v0_4_5
 RUN npm run build
 RUN chmod +x /app/start.sh
 EXPOSE 3000

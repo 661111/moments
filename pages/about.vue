@@ -3,7 +3,7 @@
   <HeaderImg />
   <div class="flex flex-col gap-4 p-2 sm:p-4" v-html="content"></div>
   <div id="version-info">
-    当前版本: <span id="version">V0.4.5</span>
+    当前版本: <span id="version">V0.4.6 Beta</span>
     <div class="update-details">
       <div>这是一个基于Vue3/Nuxt3的开源项目，用于朋友圈、留言板等功能。</div>
       <div>本项目Fork自大佬<a href="https://github.com/kingwrcy" target="_blank">kingwrcy</a>的<a href="https://github.com/kingwrcy/moments" target="_blank">moments</a></div>
@@ -66,6 +66,8 @@
       ·V0.4.4 2024-06-06 全新音乐播放器上线（QQ音乐、网易云音乐），由于特殊原因暂不支持vip歌曲，新增首页天气控件开关，位置自定义开关，时间格式自定义
       <br/>
       ·V0.4.5 2024-06-27 更新自动生成jwtkey，新增Memo对代码段的适配，新增自定义关于页面，取消对s3存储的支持（由于准备支持图像处理功能，暂时放弃s3支持），新增根据内容搜索，修复一些bug
+      <br/>
+      ·V0.4.6 开发中... 适配websocket中
     </div>
     <div onclick="window.open('https://randallanjie.com/', '_blank');">Powered By Randall</div>
   </div>

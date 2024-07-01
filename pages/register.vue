@@ -3,13 +3,13 @@
   <div class="p-2 sm:p-4 flex justify-center min-h-[500px w-full]">
     <div class="p-8 rounded shadow-md max-w-sm w-full">
       <div class="mb-4">
-        <Label for="username" class="block text-gray-700 mb-2">用户名</Label>
+        <Label for="username" class="block text-gray-700 mb-2">登陆名</Label>
         <Input v-model="state.username" autocomplete="off" type="text" id="username" />
       </div>
       <div class="mb-4">
         <Label for="username" class="block text-gray-700 mb-2">邮箱</Label>
         <div class="flex flex-row gap-2">
-          <Input v-model="state.email" autocomplete="off" type="text" id="username" />
+          <Input v-model="state.email" autocomplete="off" type="text" id="email" />
           <Button id="sendMail" type="button">发送验证码</Button>
         </div>
       </div>
@@ -23,6 +23,7 @@
       </div>
       <div class="flex flex-row gap-2">
         <Button @click="register" type="button">注册</Button>
+        <Button variant="ghost" @click="navigateTo('/login')" type="button">前往登陆</Button>
         <Button variant="ghost" @click="navigateTo('/')" type="button">返回首页</Button>
       </div>
     </div>
@@ -79,25 +80,6 @@ onMounted(() => {
 const register = async () => {
 
   toast.promise(
-      $fetch('/api/user/sendMail', {
-        method: 'POST',
-        body: JSON.stringify({ email: state.email })
-      }), {
-        loading: '发送中...',
-        success: (data) => {
-          document.getElementById('sendMail').disabled = false;
-          if (data.success) {
-            document.getElementById('vcode').hidden = false;
-            return '发送成功';
-          } else {
-            return '发送失败: ' + data.message;
-          }
-        },
-        error: (error) => `发送失败: ${error.message || '未知错误'}`,
-      }
-  );
-
-  toast.promise(
       $fetch('/api/user/register', {
         method: 'POST',
         body: JSON.stringify(state)
@@ -105,8 +87,10 @@ const register = async () => {
         loading: '注册中...',
         success: (data) => {
           if (data.success) {
-            navigateTo('/login')
-            return '注册成功';
+            setTimeout(() => {
+              navigateTo('/login')
+            }, 2000)
+            return '注册成功，即将前往登陆页面';
           } else {
             return '注册失败: ' + data.message;
           }

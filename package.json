@@ -57,7 +57,8 @@
     "vue-sonner": "^1.1.2",
     "vue3-lazy": "^1.0.0-alpha.1",
     "vuedraggable": "^2.24.3",
-    "worktop": "^0.7.3"
+    "worktop": "^0.7.3",
+    "wscat": "^5.2.1"
   },
   "devDependencies": {
     "@nuxtjs/color-mode": "^3.4.0",

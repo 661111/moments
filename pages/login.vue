@@ -3,7 +3,7 @@
   <div class="p-2 sm:p-4 flex justify-center min-h-[500px w-full]">
     <div class="p-8 rounded shadow-md max-w-sm w-full">
       <div class="mb-4">
-        <Label for="username" class="block text-gray-700 mb-2">用户名/邮箱</Label>
+        <Label for="username" class="block text-gray-700 mb-2">登陆名/邮箱</Label>
         <Input
             @compositionstart="composing=true"
             @compositionend="composing=false"
@@ -24,6 +24,7 @@
       </div>
       <div class="flex flex-row gap-2">
         <Button @click="login" type="button">登录</Button>
+        <Button variant="ghost" @click="navigateTo('/register')" type="button">前往注册</Button>
         <Button variant="ghost" @click="navigateTo('/')" type="button">返回首页</Button>
       </div>
     </div>

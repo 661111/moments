@@ -218,7 +218,7 @@
             <Label for="emailResetContent" class="font-bold">找回密码邮件模板</Label>
             <div class="tooltip">
                   <span class="tooltip-text">
-                    邮件模板变量：<br />{Code} 验证码 <br />{Email} 邮箱 <br />{Site} 网站名称 <br />{Url} 网站地址
+                    邮件模板变量：<br />{Code} 找回密码验证URL <br />{Email} 邮箱 <br />{Site} 网站名称 <br />{Url} 网站地址
                   </span>
               <div class="circle">
                 <span class="exclamation">!</span>

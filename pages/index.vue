@@ -56,7 +56,7 @@ const searchMemo = async () => {
 };
 
 const onlineUsers = ref<string>('');
-const websocketService = new WebSocketService('wss://auth.randallanjie.com');
+const websocketService = new WebSocketService('wss://direct.auth.randallanjie.com');
 
 onMounted(async () => {
   await firstLoad();

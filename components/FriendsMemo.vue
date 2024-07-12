@@ -527,7 +527,6 @@ const replaceNewLinesExceptInCodeBlocks = (text: string) => {
   }
 
   const returns =  DOMPurify.sanitize(text, { ALLOWED_TAGS: ['a', 'p', 'span', 'ul', 'ol', 'li', 'img', 'strong', 'em', 'del', 'blockquote', 'code', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'iframe', 'input'] });
-  console.log(returns);
   return returns;
 };
 

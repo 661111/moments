@@ -142,13 +142,13 @@ export default defineEventHandler(async (event) => {
           if(userat && userat.eMail && userat.eMail !== '' && userat.eMail !== user?.eMail){
             let tmpmsg = `有一条新提及您的动态！
                 用户名为:  ${user?.nickname} 的用户在动态中提及了您，点击查看: ${siteUrl}/detail/${result.id}`;
-            const emailMentionNotification = prisma.systemConfig.findFirst({
+            const emailNewMentionCommentNotification = await prisma.systemConfig.findFirst({
                 where: {
-                    key: 'emailMentionNotification',
+                    key: 'emailNewMentionCommentNotification',
                 },
             });
-            if(emailMentionNotification && emailMentionNotification.value && emailMentionNotification.value !== ''){
-              tmpmsg = emailMentionNotification.value;
+            if(emailNewMentionCommentNotification && emailNewMentionCommentNotification.value && emailNewMentionCommentNotification.value !== ''){
+              tmpmsg = emailNewMentionCommentNotification.value;
             }
             tmpmsg = tmpmsg.replaceAll('{Sitename}', siteConfig?.title);
             tmpmsg = tmpmsg.replaceAll('{SiteUrl}', siteUrl);

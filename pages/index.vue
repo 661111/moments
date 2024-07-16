@@ -56,7 +56,7 @@ const searchMemo = async () => {
 };
 
 const onlineUsers = ref<string>('');
-const websocketService = new WebSocketService('wss://direct.auth.randallanjie.com');
+// const websocketService = new WebSocketService('wss://direct.auth.randallanjie.com');
 
 onMounted(async () => {
   await firstLoad();
@@ -74,31 +74,53 @@ onMounted(async () => {
     observer.observe(getMore.value);
   }
 
-  websocketService.connect();
+  // websocketService.connect();
+  //
+  // const connection = websocketService.getConnection();
+  // if (connection) {
+  //   connection.onmessage = (event: MessageEvent) => {
+  //     const msg = event.data;
+  //     console.log('Raw message:', msg); // 打印接收到的原始信息
+  //     const msgJson = JSON.parse(msg);
+  //     if(msgJson.type === 'online_users'){
+  //       onlineUsers.value = `当前站点 ${msgJson.domain} 人在线为： ${msgJson.count}`;
+  //     }
+  //   };
+  // }
 
-  const connection = websocketService.getConnection();
-  if (connection) {
-    connection.onmessage = (event: MessageEvent) => {
-      const msg = event.data;
-      console.log('Raw message:', msg); // 打印接收到的原始信息
-      const msgJson = JSON.parse(msg);
-      if(msgJson.type === 'online_users'){
-        onlineUsers.value = `当前站点 ${msgJson.domain} 人在线为： ${msgJson.count}`;
-      }
-    };
+  // 检查scrollMemo是否存在，如果存在则滚动到对应memo
+  const scrollMemo = localStorage.getItem('scrollMemo');
+  if (scrollMemo) {
+    console.log('scrollMemo:', scrollMemo);
+    localStorage.removeItem('scrollMemo');
   }
+
+  // 监听滚动并且保存用户滚动到了哪个memo，仅当滑动超过一个memo的时候才写入sessionStorage
+  window.addEventListener('scroll', () => {
+    const memoList = document.querySelectorAll('.memo');
+    let memoId = '';
+    memoList.forEach((memo) => {
+      const rect = memo.getBoundingClientRect();
+      if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
+        memoId = memo.id;
+      }
+    });
+    console.log('memoId:', memoId);
+    if (memoId) {
+      localStorage.setItem('scrollMemo', memoId);
+    }
+  });
 
   onUnmounted(() => {
     if (getMore.value) {
       observer.unobserve(getMore.value);
     }
-    websocketService.disconnect();
+    // websocketService.disconnect();
   });
 
   watch(getMore, () => {
     setupObserver();
   }, { immediate: true });
-
 
 });
 
@@ -452,6 +474,7 @@ const welcome = async () => {
     console.error('Failed to get ip:', error);
   }
 };
+
 </script>
 
 <style scoped>

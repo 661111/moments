@@ -7,7 +7,7 @@
         <div class="username text-[#576b95] cursor-default mb-1 dark:text-white" @click="gotouser">{{ props.memo.user.nickname }}</div>
         <Pin :size=14 v-if="props.memo.pinned && props.memo.userId == 1" />
       </div>
-      <div class="memo-content text-sm friend-md words-container" ref="el" v-html="replaceNewLinesExceptInCodeBlocks(props.memo.content)"> </div>
+      <div :id="'content-' + props.memo.id" class="memo-content text-sm friend-md words-container" ref="el" v-html="replaceNewLinesExceptInCodeBlocks(props.memo.content)"> </div>
       <div class="text-[#576b95] cursor-pointer" v-if="hh > 96 && !showAll" @click="showMore">全文</div>
       <div class="text-[#576b95] cursor-pointer " v-if="showAll" @click="showLess">收起</div>
       <div class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
@@ -110,6 +110,11 @@
                  @click="navigateTo(`/detail/${props.memo.id}`)">
               <Info :size=14 />
               <div>详情</div>
+            </div>
+
+            <div class="flex flex-row gap-2 cursor-pointer items-center"
+                 @click="translateText()">
+              <div>翻译</div>
             </div>
 
             <div class="flex flex-row gap-2 cursor-pointer items-center"
@@ -543,6 +548,22 @@ const gotouser = () => {
   let event = new CustomEvent('headimgrefresh', { detail: { userId: props.memo.userId } });
   // window.dispatchEvent(event);
   headigUpdateEvent.emit(event)
+}
+
+const translateText = async () => {
+  const id = props.memo.id
+
+  await $fetch('/api/memo/translate', {
+    method: 'POST',
+    body: JSON.stringify({
+      id: id
+    })
+  }).then(res => {
+    if(res.success){
+      props.memo.content = res.data.content
+    }
+  })
+
 }
 
 </script>

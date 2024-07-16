@@ -27,6 +27,9 @@
         <Button variant="ghost" @click="navigateTo('/register')" type="button">前往注册</Button>
         <Button variant="ghost" @click="navigateTo('/')" type="button">返回首页</Button>
       </div>
+      <div class="mt-4 flex justify-end">
+        <span>忘记密码？</span><a href="/forget" class="text-blue-500">点我找回密码</a>
+      </div>
     </div>
   </div>
 </template>

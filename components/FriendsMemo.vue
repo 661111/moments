@@ -114,7 +114,7 @@
 
             <div class="flex flex-row gap-2 cursor-pointer items-center"
                  @click="translateText()">
-              <div>翻译</div>
+              <div>{{ translated?'原文':'翻译' }}</div>
             </div>
 
             <div class="flex flex-row gap-2 cursor-pointer items-center"
@@ -550,20 +550,28 @@ const gotouser = () => {
   headigUpdateEvent.emit(event)
 }
 
+const translated = ref(false)
+var originalContent = props.memo.content
+
 const translateText = async () => {
-  const id = props.memo.id
 
-  await $fetch('/api/memo/translate', {
-    method: 'POST',
-    body: JSON.stringify({
-      id: id
+  if(translated.value){
+    props.memo.content = originalContent
+    translated.value = false
+  }else{
+    const id = props.memo.id
+    await $fetch('/api/memo/translate', {
+      method: 'POST',
+      body: JSON.stringify({
+        id: id
+      })
+    }).then(res => {
+      if(res.success){
+        props.memo.content = res.data.content
+      }
     })
-  }).then(res => {
-    if(res.success){
-      props.memo.content = res.data.content
-    }
-  })
-
+    translated.value = true
+  }
 }
 
 </script>
